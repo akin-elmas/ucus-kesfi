@@ -5,7 +5,9 @@ ve favorileri cihazda kalıcı tutan Expo + TypeScript uygulaması.
 
 ## 1. Kurulum ve çalıştırma
 
-Gereken: Node 18+ (geliştirmede 24.2.0), Xcode + iOS Simulator, CocoaPods.
+Gereken: Node 18+ (geliştirmede 24.2.0), Xcode + iOS Simulator, CocoaPods. Xcode'un iOS platform bileşeni
+kurulu olmalı (Xcode > Settings > Components veya `xcodebuild -downloadPlatform iOS`); yoksa Xcode hiçbir
+simülatörü hedef kabul etmez ve derleme "iOS xx is not installed" hatasıyla durur.
 
 ```bash
 # 1) Mock servis (ayrı terminal) — bağımlılığı yok
@@ -142,6 +144,12 @@ geri dön → liste ve tab rozeti güncel; direkt + süre → 17 uçuş, sunucu 
 "Uçuş bulunamadı" + "Filtreleri temizle"; `/debug/fail-once` ile hata → "Tekrar dene" → liste;
 uygulama tamamen sonlandırılıp açıldığında favoriler korundu; son favori çıkarılınca boş durum;
 FL024 detayında varış tarihi 16 Ekim 2026, bagaj "Bagaj dahil değil" (FL009'da da).
+
+Yukarıdakiler ilk sürümde (AsyncStorage, Expo Go) yapıldı. MMKV'ye geçişten sonra development build
+(`expo run:ios`, iPhone 16 Pro / iOS 18.6) üzerinde yeniden doğrulananlar: açılış listesi aynı (24 uçuş,
+FL004, FL009, FL006); iki favori ekle → uygulamayı `simctl terminate` ile öldür → aç → ikisi de işaretli,
+rozet "2"; Favoriler ekranında ikisini çıkar → boş durum → öldür/aç → rozet "0". Liste ve filtre katmanı
+bu geçişte değişmediği için diğer akışlar yeniden elle denenmedi; jest testleri tamamı geçiyor.
 
 ## 7. Bilinen eksikler
 
