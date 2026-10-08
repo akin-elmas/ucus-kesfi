@@ -18,6 +18,8 @@ type StoredFavorites = { version: 1; items: FlightDto[] };
 type FavoritesState = {
   /** Depolamadan okuma tamamlandı mı? false iken aksiyonlar yok sayılır. */
   hydrated: boolean;
+  /** Son okuma denemesi başarısız oldu mu? Ekran "Tekrar dene" sunar. */
+  loadFailed: boolean;
   /** Eklenme sırasına göre, en yeni en sonda. */
   items: FlightDto[];
   hydrate: () => Promise<void>;
@@ -46,10 +48,13 @@ let hydratePromise: Promise<void> | null = null;
 
 export const useFavoritesStore = create<FavoritesState>((set, get) => ({
   hydrated: false,
+  loadFailed: false,
   items: [],
 
   hydrate: () => {
     // Birden çok çağrı tek okumaya bağlanır.
+    if (get().hydrated) return Promise.resolve();
+    set({ loadFailed: false });
     hydratePromise ??= AsyncStorage.getItem(FAVORITES_STORAGE_KEY)
       .then(raw => set({ items: parseStored(raw), hydrated: true }))
       .catch(e => {
@@ -57,6 +62,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
         // böylece diskteki olası kayıtlar boş state ile ezilmez.
         console.warn('Favoriler okunamadı', e);
         hydratePromise = null;
+        set({ loadFailed: true });
       });
     return hydratePromise;
   },
@@ -88,5 +94,5 @@ export function useIsFavorite(id: string): boolean {
 /** Testler için: modül düzeyindeki hydrate kilidini ve state'i sıfırlar. */
 export function __resetFavoritesStoreForTests() {
   hydratePromise = null;
-  useFavoritesStore.setState({ hydrated: false, items: [] });
+  useFavoritesStore.setState({ hydrated: false, loadFailed: false, items: [] });
 }
