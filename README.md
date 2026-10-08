@@ -63,7 +63,7 @@ npm run typecheck   # tsc --noEmit
 |---|---|
 | `__tests__/flightQuery.test.ts` | **Zorunlu test 1.** Filtre/sıralama → `page`, `limit`, `sort`, `onlyDirect` parametreleri; filtre değişince sorgunun `page=1`'den başlaması. |
 | `__tests__/favoritesStore.test.ts` | **Zorunlu test 2.** Favori ekle/çıkar → depolamaya yazma → "uygulamayı yeniden aç" (aynı depolamayla yeni store oluştur) → aynı favoriler senkron olarak geri geliyor. Ayrıca: store oluşturulurken depolamaya **hiç yazılmıyor**; bozuk JSON; yazma hatasında liste değişmiyor ve `lastWriteError` doluyor. Depolama, testte bellek içi bir `KeyValueStorage` ile enjekte ediliyor. |
-| `__tests__/FlightListScreen.test.tsx` | **P1.** Ekran etkileşim testleri (gerçek ekran + TanStack Query, yalnız `fetch` mock'lu): 500 → "Tekrar dene" → başarılı liste; Switch ile filtre değişince yeni istek `page=1&onlyDirect=true` ve eski kartlar yok; sırasız yanıt (iki varyant: abort'a uyan ve uymayan fetch); favori butonu navigasyonu tetiklemiyor, kart tetikliyor. |
+| `__tests__/FlightListScreen.test.tsx` | **P1.** Ekran etkileşim testleri (gerçek ekran + TanStack Query, yalnız `fetch` mock'lu): 500 → "Tekrar dene" → başarılı liste; sonraki sayfa 500 → eldeki 8 kart kalıyor, alttaki "Tekrar dene" yalnız `page=2` istiyor; Switch ile filtre değişince yeni istek `page=1&onlyDirect=true` ve eski kartlar yok; sırasız yanıt (iki varyant: abort'a uyan ve uymayan fetch); favori butonu navigasyonu tetiklemiyor, kart tetikliyor. |
 | `__tests__/format.test.ts` | Kuruş → `3.550,00 TL`, bagaj `0`/`null` ayrımı, Europe/Istanbul saat/tarih (FL024 ertesi gün), süre. |
 
 Snapshot testi yok.
