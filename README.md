@@ -137,7 +137,12 @@ src/
 
 ## 5. Harcanan süre
 
-_(Teslimden önce doldurulacak.)_
+Toplam yaklaşık **2,5 saat** (okuma, kurulum, geliştirme, testler ve README dahil; 6 saatlik sınırın içinde).
+
+- P0 + P1 + testler + ilk README: case'in kendisi, sürenin küçük bir kısmı.
+- MMKV'ye geçiş ve development build: kalıcılık kararını sağlamlaştırmak için sonradan yapıldı.
+- Ortam: Xcode'un iOS platform bileşenini indirmek ve disk yeri açmak (geliştirme dışı bekleme).
+- Best-practice incelemesi, ek testler, ESLint/Prettier ve Android APK.
 
 ## 6. P1
 
