@@ -16,7 +16,6 @@ import {
 import { useFlight } from '../hooks/useFlight';
 import type { FavoritesStackParamList, FlightsStackParamList } from '../navigation/types';
 
-// İki stack'te de aynı ekran ve aynı param şekli ({ id }) kullanılıyor.
 type DetailRoute =
   | RouteProp<FlightsStackParamList, 'FlightDetail'>
   | RouteProp<FavoritesStackParamList, 'FlightDetail'>;
@@ -25,7 +24,6 @@ export function FlightDetailScreen() {
   const { id } = useRoute<DetailRoute>().params;
   const { data: flight, error, refetch } = useFlight(id);
 
-  // Tek durum: veri varsa göster; yoksa hata; ikisi de yoksa yükleniyor.
   if (flight) return <FlightDetail flight={flight} />;
   if (error) {
     return (
@@ -50,8 +48,6 @@ function FlightDetail({ flight }: { flight: FlightDto }) {
   return (
     <ScrollView
       style={styles.screen}
-      // Alt güvenli alanı tab bar zaten karşılar (ekran tab bar'ın üstünde biter);
-      // iOS'ta yatay çentik/kenar boşlukları için otomatik inset.
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.content}
     >

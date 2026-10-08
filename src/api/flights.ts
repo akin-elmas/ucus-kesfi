@@ -7,7 +7,6 @@ import type {
 
 export const PAGE_SIZE = 8;
 
-/** Listeyi belirleyen kullanıcı seçimleri. Varsayılan: filtre kapalı, en düşük fiyat. */
 export type FlightFilters = {
   onlyDirect: boolean;
   sort: FlightSort;
@@ -15,10 +14,6 @@ export type FlightFilters = {
 
 export const DEFAULT_FILTERS: FlightFilters = { onlyDirect: false, sort: 'price' };
 
-/**
- * /flights için query string üretir. Filtre ve sıralama sunucuda uygulanır;
- * istemci yalnızca parametreyi taşır.
- */
 export function buildFlightListQuery(
   filters: FlightFilters,
   page: number,

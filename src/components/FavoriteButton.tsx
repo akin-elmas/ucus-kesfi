@@ -5,11 +5,6 @@ import { colors, spacing } from './theme';
 
 type Props = { flight: FlightDto; size?: 'sm' | 'lg' };
 
-/**
- * Favori aç/kapa. Durum yalnız renkle değil, şekil (★/☆) + metin + erişilebilirlik
- * state'i ile aktarılır. Karta gömülü olsa da kendi Pressable'ı olduğu için
- * dokunuş kartın navigasyonunu tetiklemez.
- */
 export function FavoriteButton({ flight, size = 'sm' }: Props) {
   const isFavorite = useIsFavorite(flight.id);
   const toggle = useFavoritesStore(s => s.toggle);

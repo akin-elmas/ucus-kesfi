@@ -1,11 +1,6 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, spacing } from './theme';
 
-/**
- * Tam ekran durum görünümleri. Ekranlar bunlardan en fazla BİRİNİ gösterir
- * (yükleniyor / hata / boş aynı anda üst üste gelmez).
- */
-
 export function LoadingView({ label = 'Uçuşlar yükleniyor…' }: { label?: string }) {
   return (
     <View style={styles.center} accessibilityRole="progressbar" accessibilityLabel={label}>

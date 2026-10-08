@@ -5,7 +5,6 @@ import {
   type FlightFilters,
 } from '../src/api/flights';
 
-/** "/flights?a=1&b=2" -> { path, params } — sıra/encoding'e bağımlı olmadan doğrulamak için. */
 function parse(query: string) {
   const [path, search = ''] = query.split('?');
   const params = new URLSearchParams(search);
@@ -58,7 +57,6 @@ describe('buildFlightListQuery', () => {
   });
 
   describe('filtre değişince sayfalama başa döner', () => {
-    // Sayfa 3'e kadar ilerlenmiş bir listede kullanıcı filtreyi/sıralamayı değiştiriyor.
     const changes: Array<[string, FlightFilters]> = [
       ['DEFAULT_FILTERS', DEFAULT_FILTERS],
       ['yalnızca direkt açıldı', { ...DEFAULT_FILTERS, onlyDirect: true }],

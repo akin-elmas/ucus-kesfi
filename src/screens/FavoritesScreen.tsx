@@ -17,9 +17,6 @@ export function FavoritesScreen({ navigation }: Props) {
   const items = useFavoritesStore(s => s.items);
   const lastWriteError = useFavoritesStore(s => s.lastWriteError);
 
-  // Store eklenme sırasını tutar; ekranda kalkış saatine göre artan gösteriyoruz
-  // (aynı gün, aynı rota — kullanıcı için en doğal sıra). ISO + aynı ofset olduğu için
-  // Date.parse ile karşılaştırma güvenli; eşitlikte id ile sabit sıra.
   const sorted = useMemo(
     () =>
       [...items].sort(

@@ -29,7 +29,6 @@ const SORT_OPTIONS: { value: FlightSort; label: string; testID: string }[] = [
 const keyExtractor = (item: FlightDto) => item.id;
 
 export function FlightListScreen({ navigation }: Props) {
-  // Ekran stack'te mounted kaldığı için detaydan dönüşte filtre ve sayfalar korunur.
   const [filters, setFilters] = useState<FlightFilters>(DEFAULT_FILTERS);
   const {
     flights,
@@ -114,7 +113,6 @@ export function FlightListScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.controls}>
-        {/* Satırın tamamı dokunulabilir: daha büyük hedef, ekran okuyucuda tek öğe. */}
         <Pressable
           style={styles.switchRow}
           onPress={() => setFilters({ ...filters, onlyDirect: !filters.onlyDirect })}

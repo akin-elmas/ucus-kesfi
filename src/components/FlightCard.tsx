@@ -14,7 +14,6 @@ import { colors, spacing } from './theme';
 
 type Props = { flight: FlightDto; onPress: (id: string) => void };
 
-/** Liste ve favoriler ekranının ortak uçuş kartı. */
 export const FlightCard = memo(function FlightCard({ flight, onPress }: Props) {
   const dep = formatTime(flight.departureAt);
   const arr = formatTime(flight.arrivalAt);
@@ -27,8 +26,6 @@ export const FlightCard = memo(function FlightCard({ flight, onPress }: Props) {
     <Pressable
       onPress={() => onPress(flight.id)}
       accessibilityRole="button"
-      // iOS'ta erişilebilir kart iç butonu VoiceOver'dan gizler; favori aksiyonu bu yüzden
-      // kartın özel aksiyonu olarak da sunulur (VoiceOver'da yukarı/aşağı kaydırma).
       accessibilityLabel={[
         `${flight.airline} ${flight.flightNumber}`,
         `${flight.origin.code} ${dep}, ${flight.destination.code} ${arr}${nextDay ? ' ertesi gün' : ''}`,

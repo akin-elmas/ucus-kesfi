@@ -5,7 +5,6 @@ import { useFavoritesStore } from '../state/favoritesStore';
 
 export const flightDetailKey = (id: string) => ['flights', 'detail', id] as const;
 
-/** Elde zaten olan uçuşu bulur: önce yüklenmiş liste sayfaları, sonra favoriler. */
 function findKnownFlight(queryClient: QueryClient, id: string): FlightDto | undefined {
   const lists = queryClient.getQueriesData<InfiniteData<FlightListResponse>>({
     queryKey: ['flights', 'list'],
@@ -19,10 +18,6 @@ function findKnownFlight(queryClient: QueryClient, id: string): FlightDto | unde
   return useFavoritesStore.getState().items.find(f => f.id === id);
 }
 
-/**
- * Tek uçuş. Uçuş listede veya favorilerde zaten varsa initialData olarak kullanılır:
- * detay anında açılır ve (staleTime: Infinity) ek istek atılmaz. Yoksa ağdan çekilir.
- */
 export function useFlight(id: string) {
   const queryClient = useQueryClient();
   return useQuery({

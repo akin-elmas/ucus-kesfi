@@ -61,7 +61,6 @@ describe('formatTime / formatDate (Europe/Istanbul, cihaz saat diliminden bağı
   });
 
   it('UTC (Z) ile verilen an İstanbul saatine çevrilir', () => {
-    // 2026-10-15T21:30Z == 16 Ekim 00:30 İstanbul
     expect(formatTime('2026-10-15T21:30:00Z')).toBe('00:30');
     expect(formatDate('2026-10-15T21:30:00Z')).toBe('16 Ekim 2026');
   });

@@ -18,7 +18,6 @@ const FL001 = byId('FL001');
 const FL007 = byId('FL007');
 const FL024 = byId('FL024');
 
-/** Bellek-içi depo; disk gibi davranır: store'dan bağımsız yaşar. */
 function memoryStorage(initial: Record<string, string> = {}) {
   const data = new Map(Object.entries(initial));
   const storage = {
@@ -84,7 +83,6 @@ describe('favoritesStore — ekle / çıkar / yeniden aç', () => {
     expect(key).toBe(FAVORITES_STORAGE_KEY);
     expect(JSON.parse(value)).toEqual({ version: 1, items: [FL001, FL024] });
 
-    // Uygulamayı kapatıp aç: yeni store, aynı depo.
     const reopened = createFavoritesStore(storage);
     expect(reopened.getState().items).toEqual([FL001, FL024]);
     expect(readPayload(data)).toEqual({ version: 1, items: [FL001, FL024] });
@@ -99,7 +97,7 @@ describe('favoritesStore — ekle / çıkar / yeniden aç', () => {
     const second = createFavoritesStore(storage);
     expect(ids(second)).toEqual(['FL001', 'FL007']);
 
-    second.getState().toggle(FL001); // çıkar
+    second.getState().toggle(FL001);
     expect(ids(second)).toEqual(['FL007']);
     expect(readPayload(data)).toEqual({ version: 1, items: [FL007] });
 
@@ -137,7 +135,6 @@ describe('favoritesStore — yazma hatası', () => {
       throw new Error('disk dolu');
     });
 
-    // Store önce diske yazar, sonra tek set yapar: yazma patlarsa items hiç değişmez.
     const beforeAdd = store.getState().items;
     store.getState().toggle(FL007);
 
@@ -146,7 +143,6 @@ describe('favoritesStore — yazma hatası', () => {
     expect(store.getState().lastWriteError).toBe(WRITE_ERROR_MESSAGE);
     expect(readPayload(data)).toEqual({ version: 1, items: [FL001] });
 
-    // Çıkarma da başarısız olursa liste değişmez; favori hiç çıkarılmamış olur.
     storage.set.mockImplementationOnce(() => {
       throw new Error('disk dolu');
     });
