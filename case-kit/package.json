@@ -1,0 +1,13 @@
+{
+  "name": "ucus-kesfi-mock-servis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Case icin bagimliliksiz mock HTTP ucus servisi",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

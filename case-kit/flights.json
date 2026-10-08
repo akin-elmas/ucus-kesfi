@@ -1,0 +1,530 @@
+[
+  {
+    "id": "FL001",
+    "flightNumber": "MK118",
+    "airline": "Mavi Kanat",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T06:15:00+03:00",
+    "arrivalAt": "2026-10-15T07:25:00+03:00",
+    "durationMinutes": 70,
+    "stops": 0,
+    "priceMinor": 189900,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL002",
+    "flightNumber": "EH204",
+    "airline": "Ege Hava Yollari",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T06:40:00+03:00",
+    "arrivalAt": "2026-10-15T07:55:00+03:00",
+    "durationMinutes": 75,
+    "stops": 0,
+    "priceMinor": 134900,
+    "currency": "TRY",
+    "baggageKg": 0
+  },
+  {
+    "id": "FL003",
+    "flightNumber": "TA512",
+    "airline": "Toros Air",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T07:05:00+03:00",
+    "arrivalAt": "2026-10-15T08:10:00+03:00",
+    "durationMinutes": 65,
+    "stops": 0,
+    "priceMinor": 275000,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL004",
+    "flightNumber": "AE331",
+    "airline": "Anadolu Express",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T07:30:00+03:00",
+    "arrivalAt": "2026-10-15T11:00:00+03:00",
+    "durationMinutes": 210,
+    "stops": 1,
+    "priceMinor": 119900,
+    "currency": "TRY",
+    "baggageKg": 0
+  },
+  {
+    "id": "FL005",
+    "flightNumber": "DZ077",
+    "airline": "Deniz Airlines",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T08:10:00+03:00",
+    "arrivalAt": "2026-10-15T09:30:00+03:00",
+    "durationMinutes": 80,
+    "stops": 0,
+    "priceMinor": 242500,
+    "currency": "TRY",
+    "baggageKg": 15
+  },
+  {
+    "id": "FL006",
+    "flightNumber": "MK126",
+    "airline": "Mavi Kanat",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T08:45:00+03:00",
+    "arrivalAt": "2026-10-15T13:10:00+03:00",
+    "durationMinutes": 265,
+    "stops": 1,
+    "priceMinor": 128000,
+    "currency": "TRY",
+    "baggageKg": null
+  },
+  {
+    "id": "FL007",
+    "flightNumber": "EH218",
+    "airline": "Ege Hava Yollari",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T09:20:00+03:00",
+    "arrivalAt": "2026-10-15T10:30:00+03:00",
+    "durationMinutes": 70,
+    "stops": 0,
+    "priceMinor": 189900,
+    "currency": "TRY",
+    "baggageKg": 15
+  },
+  {
+    "id": "FL008",
+    "flightNumber": "TA528",
+    "airline": "Toros Air",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T10:00:00+03:00",
+    "arrivalAt": "2026-10-15T11:25:00+03:00",
+    "durationMinutes": 85,
+    "stops": 0,
+    "priceMinor": 316000,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL009",
+    "flightNumber": "AE347",
+    "airline": "Anadolu Express",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T10:35:00+03:00",
+    "arrivalAt": "2026-10-15T13:50:00+03:00",
+    "durationMinutes": 195,
+    "stops": 1,
+    "priceMinor": 125500,
+    "currency": "TRY",
+    "baggageKg": 0
+  },
+  {
+    "id": "FL010",
+    "flightNumber": "DZ091",
+    "airline": "Deniz Airlines",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T11:15:00+03:00",
+    "arrivalAt": "2026-10-15T12:30:00+03:00",
+    "durationMinutes": 75,
+    "stops": 0,
+    "priceMinor": 208000,
+    "currency": "TRY",
+    "baggageKg": null
+  },
+  {
+    "id": "FL011",
+    "flightNumber": "MK134",
+    "airline": "Mavi Kanat",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T12:00:00+03:00",
+    "arrivalAt": "2026-10-15T13:05:00+03:00",
+    "durationMinutes": 65,
+    "stops": 0,
+    "priceMinor": 298000,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL012",
+    "flightNumber": "EH232",
+    "airline": "Ege Hava Yollari",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T12:40:00+03:00",
+    "arrivalAt": "2026-10-15T18:10:00+03:00",
+    "durationMinutes": 330,
+    "stops": 1,
+    "priceMinor": 141000,
+    "currency": "TRY",
+    "baggageKg": 0
+  },
+  {
+    "id": "FL013",
+    "flightNumber": "TA544",
+    "airline": "Toros Air",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T13:25:00+03:00",
+    "arrivalAt": "2026-10-15T14:35:00+03:00",
+    "durationMinutes": 70,
+    "stops": 0,
+    "priceMinor": 355000,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL014",
+    "flightNumber": "AE359",
+    "airline": "Anadolu Express",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T14:05:00+03:00",
+    "arrivalAt": "2026-10-15T15:25:00+03:00",
+    "durationMinutes": 80,
+    "stops": 0,
+    "priceMinor": 174500,
+    "currency": "TRY",
+    "baggageKg": 15
+  },
+  {
+    "id": "FL015",
+    "flightNumber": "DZ105",
+    "airline": "Deniz Airlines",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T14:50:00+03:00",
+    "arrivalAt": "2026-10-15T18:50:00+03:00",
+    "durationMinutes": 240,
+    "stops": 1,
+    "priceMinor": 132000,
+    "currency": "TRY",
+    "baggageKg": null
+  },
+  {
+    "id": "FL016",
+    "flightNumber": "MK142",
+    "airline": "Mavi Kanat",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T15:30:00+03:00",
+    "arrivalAt": "2026-10-15T16:45:00+03:00",
+    "durationMinutes": 75,
+    "stops": 0,
+    "priceMinor": 221000,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL017",
+    "flightNumber": "EH246",
+    "airline": "Ege Hava Yollari",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T16:20:00+03:00",
+    "arrivalAt": "2026-10-15T17:30:00+03:00",
+    "durationMinutes": 70,
+    "stops": 0,
+    "priceMinor": 163000,
+    "currency": "TRY",
+    "baggageKg": 0
+  },
+  {
+    "id": "FL018",
+    "flightNumber": "TA560",
+    "airline": "Toros Air",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T17:00:00+03:00",
+    "arrivalAt": "2026-10-15T21:45:00+03:00",
+    "durationMinutes": 285,
+    "stops": 1,
+    "priceMinor": 147500,
+    "currency": "TRY",
+    "baggageKg": 15
+  },
+  {
+    "id": "FL019",
+    "flightNumber": "AE371",
+    "airline": "Anadolu Express",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T17:45:00+03:00",
+    "arrivalAt": "2026-10-15T19:10:00+03:00",
+    "durationMinutes": 85,
+    "stops": 0,
+    "priceMinor": 385000,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL020",
+    "flightNumber": "DZ119",
+    "airline": "Deniz Airlines",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T18:30:00+03:00",
+    "arrivalAt": "2026-10-15T19:45:00+03:00",
+    "durationMinutes": 75,
+    "stops": 0,
+    "priceMinor": 199000,
+    "currency": "TRY",
+    "baggageKg": null
+  },
+  {
+    "id": "FL021",
+    "flightNumber": "MK150",
+    "airline": "Mavi Kanat",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T19:15:00+03:00",
+    "arrivalAt": "2026-10-15T23:00:00+03:00",
+    "durationMinutes": 225,
+    "stops": 1,
+    "priceMinor": 138500,
+    "currency": "TRY",
+    "baggageKg": 0
+  },
+  {
+    "id": "FL022",
+    "flightNumber": "EH260",
+    "airline": "Ege Hava Yollari",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T20:05:00+03:00",
+    "arrivalAt": "2026-10-15T21:25:00+03:00",
+    "durationMinutes": 80,
+    "stops": 0,
+    "priceMinor": 256000,
+    "currency": "TRY",
+    "baggageKg": 15
+  },
+  {
+    "id": "FL023",
+    "flightNumber": "TA576",
+    "airline": "Toros Air",
+    "origin": {
+      "code": "IST",
+      "city": "İstanbul",
+      "name": "İstanbul Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T21:40:00+03:00",
+    "arrivalAt": "2026-10-15T22:50:00+03:00",
+    "durationMinutes": 70,
+    "stops": 0,
+    "priceMinor": 178000,
+    "currency": "TRY",
+    "baggageKg": 20
+  },
+  {
+    "id": "FL024",
+    "flightNumber": "AE383",
+    "airline": "Anadolu Express",
+    "origin": {
+      "code": "SAW",
+      "city": "İstanbul",
+      "name": "Sabiha Gökçen Havalimanı"
+    },
+    "destination": {
+      "code": "AYT",
+      "city": "Antalya",
+      "name": "Antalya Havalimanı"
+    },
+    "departureAt": "2026-10-15T23:20:00+03:00",
+    "arrivalAt": "2026-10-16T00:45:00+03:00",
+    "durationMinutes": 85,
+    "stops": 0,
+    "priceMinor": 152000,
+    "currency": "TRY",
+    "baggageKg": 0
+  }
+]
