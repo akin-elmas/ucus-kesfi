@@ -14,7 +14,8 @@ import { toUserMessage } from '../api/client';
 import type { FlightDto, FlightSort } from '../api/flight.types';
 import { DEFAULT_FILTERS, type FlightFilters } from '../api/flights';
 import { FlightCard } from '../components/FlightCard';
-import { LoadingView, MessageView } from '../components/StateViews';
+import { FlightListSkeleton } from '../components/FlightListSkeleton';
+import { MessageView } from '../components/StateViews';
 import { colors, spacing } from '../components/theme';
 import { useFlightList } from '../hooks/useFlightList';
 import type { FlightsStackParamList } from '../navigation/types';
@@ -58,7 +59,7 @@ export function FlightListScreen({ navigation }: Props) {
 
   let content: ReactNode;
   if (flights.length === 0 && isFetching) {
-    content = <LoadingView />;
+    content = <FlightListSkeleton />;
   } else if (flights.length === 0 && isError) {
     content = (
       <MessageView
