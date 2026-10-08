@@ -3,7 +3,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useCallback, useMemo } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { FlightCard } from '../components/FlightCard';
-import { LoadingView, MessageView } from '../components/StateViews';
+import { MessageView } from '../components/StateViews';
 import { colors, spacing } from '../components/theme';
 import type { FavoritesStackParamList, RootTabParamList } from '../navigation/types';
 import { useFavoritesStore } from '../state/favoritesStore';
@@ -11,10 +11,8 @@ import { useFavoritesStore } from '../state/favoritesStore';
 type Props = NativeStackScreenProps<FavoritesStackParamList, 'FavoriteList'>;
 
 export function FavoritesScreen({ navigation }: Props) {
-  const hydrated = useFavoritesStore(s => s.hydrated);
   const items = useFavoritesStore(s => s.items);
-  const loadFailed = useFavoritesStore(s => s.loadFailed);
-  const hydrate = useFavoritesStore(s => s.hydrate);
+  const lastWriteError = useFavoritesStore(s => s.lastWriteError);
 
   // Store eklenme sırasını tutar; ekranda kalkış saatine göre artan gösteriyoruz
   // (aynı gün, aynı rota — kullanıcı için en doğal sıra). ISO + aynı ofset olduğu için
@@ -32,31 +30,16 @@ export function FavoritesScreen({ navigation }: Props) {
     [navigation],
   );
 
-  if (!hydrated && loadFailed) {
-    return (
-      <View style={styles.screen}>
-        <MessageView
-          title="Favoriler okunamadı"
-          body="Kayıtlı favorilerin silinmedi; tekrar denemek ister misin?"
-          actionLabel="Tekrar dene"
-          onAction={hydrate}
-          testID="favorites-load-error"
-        />
-      </View>
-    );
-  }
-
-  if (!hydrated) {
-    return (
-      <View style={styles.screen}>
-        <LoadingView label="Favoriler yükleniyor…" />
-      </View>
-    );
-  }
+  const writeError = lastWriteError ? (
+    <Text style={styles.writeError} accessibilityRole="alert" testID="favorites-write-error">
+      {lastWriteError}
+    </Text>
+  ) : null;
 
   if (sorted.length === 0) {
     return (
       <View style={styles.screen}>
+        {writeError}
         <MessageView
           title="Henüz favori uçuş yok"
           body="Listedeki ☆ ile uçuş kaydedebilirsin."
@@ -73,19 +56,22 @@ export function FavoritesScreen({ navigation }: Props) {
   }
 
   return (
-    <FlatList
-      style={styles.screen}
-      data={sorted}
-      keyExtractor={f => f.id}
-      renderItem={({ item }) => <FlightCard flight={item} onPress={openDetail} />}
-      contentContainerStyle={styles.content}
-      ListHeaderComponent={
-        <Text style={styles.count} accessibilityRole="header" testID="favorites-count">
-          {sorted.length} favori uçuş
-        </Text>
-      }
-      testID="favorites-list"
-    />
+    <View style={styles.screen}>
+      {writeError}
+      <FlatList
+        style={styles.screen}
+        data={sorted}
+        keyExtractor={f => f.id}
+        renderItem={({ item }) => <FlightCard flight={item} onPress={openDetail} />}
+        contentContainerStyle={styles.content}
+        ListHeaderComponent={
+          <Text style={styles.count} accessibilityRole="header" testID="favorites-count">
+            {sorted.length} favori uçuş
+          </Text>
+        }
+        testID="favorites-list"
+      />
+    </View>
   );
 }
 
@@ -93,4 +79,5 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.lg, gap: spacing.md },
   count: { fontSize: 15, fontWeight: '600', color: colors.muted },
+  writeError: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm, fontSize: 13, color: colors.danger },
 });

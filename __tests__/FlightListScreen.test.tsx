@@ -1,15 +1,11 @@
 import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { ComponentProps } from 'react';
 import flightsJson from '../case-kit/flights.json';
 import type { FlightDto, FlightListResponse } from '../src/api/flight.types';
 import { createQueryClient } from '../src/api/queryClient';
 import { FlightListScreen } from '../src/screens/FlightListScreen';
-import {
-  __resetFavoritesStoreForTests,
-  useFavoritesStore,
-} from '../src/state/favoritesStore';
+import { useFavoritesStore } from '../src/state/favoritesStore';
 
 const flights = flightsJson as FlightDto[];
 
@@ -80,12 +76,11 @@ async function renderScreen() {
   );
 }
 
-beforeEach(async () => {
+beforeEach(() => {
   queryClient = createQueryClient(); // retry: false
   fetchMock.mockReset();
   global.fetch = fetchMock as unknown as typeof fetch;
-  await AsyncStorage.clear();
-  __resetFavoritesStoreForTests();
+  useFavoritesStore.setState({ items: [], lastWriteError: null });
 });
 
 afterEach(() => {
@@ -253,7 +248,6 @@ describe('FlightListScreen — sırasız yanıt (P1-2)', () => {
 describe('FlightListScreen — kart ve favori dokunuşları', () => {
   it('favori butonu navigasyonu tetiklemez; karta basmak detayı açar', async () => {
     fetchMock.mockImplementation(async url => jsonResponse(200, serveFlights(url)));
-    await act(() => useFavoritesStore.getState().hydrate());
 
     await renderScreen();
     const fav = await screen.findByTestId('favorite-FL004');

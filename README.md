@@ -5,31 +5,44 @@ ve favorileri cihazda kalıcı tutan Expo + TypeScript uygulaması.
 
 ## 1. Kurulum ve çalıştırma
 
-Gereken: Node 18+ (geliştirmede 24.2.0), Xcode + iOS Simulator.
+Gereken: Node 18+ (geliştirmede 24.2.0), Xcode + iOS Simulator, CocoaPods.
 
 ```bash
 # 1) Mock servis (ayrı terminal) — bağımlılığı yok
 cd case-kit
 node server.js            # http://localhost:4000
 
-# 2) Uygulama
+# 2) Uygulama — development build
 npm install
-npx expo start --ios      # Expo Go'yu simülatöre kurar ve uygulamayı açar
+npx expo run:ios          # ilk çalıştırma: prebuild + pod install + Xcode derlemesi, simülatöre kurar, Metro'yu açar
 ```
 
-Servis adresi `src/api/client.ts` içinde: iOS'ta `http://localhost:4000`, Android emülatöründe `http://10.0.2.2:4000`.
-Fiziksel cihaz için: `EXPO_PUBLIC_API_URL=http://<LAN-IP>:4000 npx expo start`.
+Favoriler native bir modülle (MMKV) saklandığı için uygulama **Expo Go'da açılmaz**; `npx expo run:ios` yerel bir
+debug build alır. `ios/` klasörü Continuous Native Generation ile üretilir ve `.gitignore`'dadır; yoksa ilk
+çalıştırmada `npx expo prebuild` kendiliğinden çalışır. İlk derleme birkaç dakika sürer.
 
-Uygulama yalnızca Expo Go'da bulunan modülleri kullanır (AsyncStorage, screens, safe-area), development build gerekmez.
+Uygulama simülatörde kuruluyken, yalnız JS/TS değişikliklerinde yeniden derlemek gerekmez:
+
+```bash
+npx expo start --dev-client   # sadece Metro; terminalde "i" kurulu uygulamayı açar
+```
+
+Projede `expo-dev-client` olmadığı için `npx expo start` tek başına Expo Go'yu hedefler; `--dev-client` bayrağı bu
+yüzden gerekli. Native bağımlılık veya `app.json` değişirse `npx expo run:ios` yeniden çalıştırılır.
+
+Servis adresi `src/api/client.ts` içinde: iOS'ta `http://localhost:4000`, Android emülatöründe `http://10.0.2.2:4000`.
+Fiziksel cihaz için: `EXPO_PUBLIC_API_URL=http://<LAN-IP>:4000 npx expo run:ios --device` (denenmedi).
 
 ## 2. Doğrulanan platform
 
 | | |
 |---|---|
 | Platform | iOS Simulator — iPhone 16 Pro, iOS 18.6 (Xcode 26.4) |
-| Expo SDK | 57.0.27 (Expo Go) |
+| Expo SDK | 57.0.27 — development build (`expo run:ios`, Debug) |
 | React Native / React | 0.86.3 / 19.2.3 |
 | TypeScript | 6.0 |
+| react-native-mmkv / react-native-nitro-modules | 4.3.2 / 0.37.1 |
+| CocoaPods | 1.16.2 |
 | Node / npm | 24.2.0 / 11.3.0 — kilit dosyası: `package-lock.json` |
 
 Android'de çalıştırılmadı.
@@ -37,14 +50,14 @@ Android'de çalıştırılmadı.
 ## 3. Test
 
 ```bash
-npm test            # jest (jest-expo preset) — 4 suite, 48 test
+npm test            # jest (jest-expo preset)
 npm run typecheck   # tsc --noEmit
 ```
 
 | Dosya | Ne doğruluyor |
 |---|---|
 | `__tests__/flightQuery.test.ts` | **Zorunlu test 1.** Filtre/sıralama → `page`, `limit`, `sort`, `onlyDirect` parametreleri; filtre değişince sorgunun `page=1`'den başlaması; `ids` toplu sorgusu. |
-| `__tests__/favoritesStore.test.ts` | **Zorunlu test 2.** Favori ekle/çıkar → AsyncStorage'a yazma → "uygulamayı yeniden aç" (store sıfırla + hydrate) → aynı favoriler geri geliyor. Ayrıca: hydrate bitmeden yapılan aksiyonlar yok sayılıyor ve **depolamaya hiç yazılmıyor**; bozuk JSON; okuma hatası ve tekrar deneme. |
+| `__tests__/favoritesStore.test.ts` | **Zorunlu test 2.** Favori ekle/çıkar → depolamaya yazma → "uygulamayı yeniden aç" (aynı depolamayla yeni store oluştur) → aynı favoriler senkron olarak geri geliyor. Ayrıca: store oluşturulurken depolamaya **hiç yazılmıyor**; bozuk JSON; yazma hatasında state önceki listeye dönüyor ve `lastWriteError` doluyor. Depolama, testte bellek içi bir `KeyValueStorage` ile enjekte ediliyor. |
 | `__tests__/FlightListScreen.test.tsx` | **P1.** Ekran etkileşim testleri (gerçek ekran + TanStack Query, yalnız `fetch` mock'lu): 500 → "Tekrar dene" → başarılı liste; Switch ile filtre değişince yeni istek `page=1&onlyDirect=true` ve eski kartlar yok; sırasız yanıt (iki varyant: abort'a uyan ve uymayan fetch); favori butonu navigasyonu tetiklemiyor, kart tetikliyor. |
 | `__tests__/format.test.ts` | Kuruş → `3.550,00 TL`, bagaj `0`/`null` ayrımı, Europe/Istanbul saat/tarih (FL024 ertesi gün), süre. |
 
@@ -56,7 +69,7 @@ Snapshot testi yok.
 src/
   api/          HTTP katmanı: client (fetch + ApiError), flights (sorgu üreticiler + uç fonksiyonları), queryClient
   domain/       Saf formatlayıcılar (fiyat, saat, tarih, süre, bagaj)
-  state/        favoritesStore — zustand + AsyncStorage
+  state/        storage (tek MMKV örneği + KeyValueStorage arayüzü), favoritesStore — zustand
   hooks/        useFlightList (sayfalı liste), useFlight (detay)
   components/   FlightCard, FavoriteButton, StateViews, theme
   screens/      FlightList, FlightDetail, Favorites
@@ -77,13 +90,21 @@ src/
   - `staleTime: Infinity` — veri sabit; detaydan dönüşte yeniden çekme yok, yüklenmiş sayfalar ve kaydırma konumu korunur.
 - **Filtre state'i ekranın `useState`'inde.** Liste ekranı stack'te mounted kaldığı için detaydan dönüşte korunur;
   kalıcılık istenmediği için global store gereksiz.
-- **Favoriler: zustand store + AsyncStorage, uçuşun tamamı (DTO) saklanıyor.** Veri seti sabit; böylece favoriler
+- **Favoriler: zustand store + MMKV, uçuşun tamamı (DTO) saklanıyor.** Veri seti sabit; böylece favoriler
   ekranı ağsız ve anında açılır, liste/detay/favoriler aynı kaynaktan okuduğu için işaretler anında tutarlıdır.
   (Alternatif `ids` ile tazelemeydi; fiyat değişebilen gerçek bir serviste onu seçerdim.)
-  - zustand'ın `persist` middleware'i yerine ~30 satırlık elle yazılmış kalıcılık: kritik kural "hydrate
-    bitmeden boş state'i diske yazma" açıkça kodda ve testte görünsün diye. Hydrate bitmeden aksiyonlar
-    yok sayılır (butonlar `disabled`), yazma yalnız kullanıcı aksiyonunda olur. Okuma hatası olursa
-    yazma kapalı kalır ve Favoriler ekranı "Tekrar dene" sunar.
+  - **Neden MMKV:** okuma senkron. `createFavoritesStore(storage)` ilk state'i oluşturulurken diskten okur;
+    hydrate penceresi olmadığı için "açılışta boş state'i diske yazma" sorunu yapısal olarak ortadan kalkar —
+    bir zamanlama kuralına (ve onu koruyan `hydrated` bayrağı, devre dışı butonlar) gerek kalmaz. Oluşturmada
+    hiç yazma yok; yazma yalnız kullanıcı aksiyonunda. Performans gerekçe değil: veri en fazla 24 kayıt.
+  - **Bedeli:** MMKV native modül (Nitro) olduğu için Expo Go'da çalışmaz, development build gerekir
+    (Xcode + CocoaPods, ilk derleme birkaç dakika). İlk sürüm AsyncStorage ile Expo Go'da çalışıyordu;
+    kalıcılık kuralını yapı gereği garanti etmek bu bedele değer görüldü.
+  - zustand'ın `persist` middleware'i yerine elle yazılmış kalıcılık: okuma/yazma ve hata davranışı
+    açıkça kodda ve testte görünsün diye. Depolama `src/state/storage.ts`'teki küçük `KeyValueStorage`
+    arayüzünün arkasında; testte bellek içi bir uygulama enjekte ediliyor.
+  - Yazma hatası (MMKV `set` hata fırlatırsa) state önceki listeye geri alınır ve Favoriler ekranında tek
+    satır uyarı gösterilir (`lastWriteError`).
 - **Detay** `useQuery(['flights','detail',id])`, `initialData` önce liste önbelleğinden sonra favorilerden —
   çoğu durumda ek istek atılmaz; deep-link benzeri durumda ağdan çekilir.
 - **Tarih/saat** Intl'e ve cihaz saat dilimine bağlı değil: Europe/Istanbul 2016'dan beri sabit UTC+3,
@@ -127,7 +148,8 @@ FL024 detayında varış tarihi 16 Ekim 2026, bagaj "Bagaj dahil değil" (FL009'
 - Yalnız iOS Simulator'da doğrulandı; Android ve fiziksel cihazda denenmedi.
 - Favoriler uçuşun o anki kopyasını tutar; sunucuda fiyat değişse favoriler ekranı eski değeri gösterir
   (sabit veri seti için bilinçli tercih, bkz. §4).
-- Favori yazma hatası (`setItem` reddi) yalnız loglanır; kullanıcıya gösterilmez ve state geri alınmaz.
+- Development build gerektiriyor; Expo Go'da açılmaz (bkz. §1, §4).
+- MMKV verisi şifresiz saklanıyor (şifreleme anahtarı verilmedi). Favoriler hassas veri olmadığı için gerek görülmedi.
 - Hata mesajları ayrıntı vermez: 404 dışındaki tüm servis hataları aynı metni gösterir.
 - Liste için pull-to-refresh yok (istenmedi).
 - Ekran testleri `fetch`'i mock'lar; mock servisle uçtan uca (Detox/Maestro) otomatik test yok.
@@ -136,7 +158,8 @@ FL024 detayında varış tarihi 16 Ekim 2026, bagaj "Bagaj dahil değil" (FL009'
 
 Claude Code (Anthropic) kullanıldı. Temel iskelet (API katmanı, formatlayıcılar, favori store'u, navigasyon)
 ana oturumda yazıldı; liste ekranı + sayfalama hook'u, detay + favoriler ekranları ve testler alt ajanlara
-paralel dağıtıldı, çıktıları ana oturumda okunup gözden geçirildi. Doğrulama: `tsc` ve jest; race testinin
+paralel dağıtıldı, çıktıları ana oturumda okunup gözden geçirildi. Favorilerin AsyncStorage'dan MMKV'ye
+geçişi de (store + testler, native build, README) alt ajanlarla paralel yapıldı. Doğrulama: `tsc` ve jest; race testinin
 gerçekten hata yakaladığını görmek için kod bilerek bozulup testin kırıldığı kontrol edildi; tüm P0 akışları
 iOS Simulator'da mock servise karşı tek tek denendi (yukarıdaki liste). Simülatörde Switch'in sentetik
 dokunuşa tepki vermemesi bu sırada fark edildi ve satırın tamamı dokunulabilir yapıldı; VoiceOver'ın kart

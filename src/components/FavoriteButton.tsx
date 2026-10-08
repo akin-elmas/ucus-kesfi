@@ -12,18 +12,16 @@ type Props = { flight: FlightDto; size?: 'sm' | 'lg' };
  */
 export function FavoriteButton({ flight, size = 'sm' }: Props) {
   const isFavorite = useIsFavorite(flight.id);
-  const hydrated = useFavoritesStore(s => s.hydrated);
   const toggle = useFavoritesStore(s => s.toggle);
   const label = isFavorite ? 'Favorilerden çıkar' : 'Favorilere ekle';
 
   return (
     <Pressable
       onPress={() => toggle(flight)}
-      disabled={!hydrated}
       hitSlop={8}
       accessibilityRole="button"
       accessibilityLabel={`${label}: ${flight.airline} ${flight.flightNumber}`}
-      accessibilityState={{ selected: isFavorite, disabled: !hydrated }}
+      accessibilityState={{ selected: isFavorite }}
       testID={`favorite-${flight.id}`}
       style={({ pressed }) => [
         styles.base,
