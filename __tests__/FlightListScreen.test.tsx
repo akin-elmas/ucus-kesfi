@@ -116,6 +116,55 @@ describe('FlightListScreen — hata ve "Tekrar dene" (P1-1)', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(requestedUrls()[1].searchParams.get('page')).toBe('1');
   });
+
+  it('sonraki sayfa hatasında eldeki kartlar kalır; footer "Tekrar dene" yalnız page=2 ister', async () => {
+    fetchMock
+      .mockImplementationOnce(async url => jsonResponse(200, serveFlights(url))) // page=1
+      .mockResolvedValueOnce(jsonResponse(500, errorBody)) // page=2 başarısız
+      .mockImplementation(async url => jsonResponse(200, serveFlights(url))); // page=2 tekrar
+
+    await renderScreen();
+    await screen.findByTestId('flight-card-FL004');
+
+    const page1Ids = idsOf(serveFlights('http://x/flights?page=1&limit=8'));
+    const page2Ids = idsOf(serveFlights('http://x/flights?page=2&limit=8'));
+    expect(visibleCardIds()).toEqual(page1Ids);
+    expect(page1Ids).toHaveLength(8);
+
+    // Liste sonuna kaydır → onEndReached → page=2 (başarısız).
+    const list = screen.getByTestId('flight-list');
+    await fireEvent(list, 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 400, height: 800 } } });
+    await fireEvent(list, 'contentSizeChange', 400, 2500);
+    await fireEvent.scroll(list, {
+      nativeEvent: {
+        contentOffset: { x: 0, y: 1700 },
+        contentSize: { height: 2500, width: 400 },
+        layoutMeasurement: { height: 800, width: 400 },
+      },
+    });
+
+    expect(await screen.findByTestId('load-more-retry')).toBeTruthy();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(requestedUrls()[1].searchParams.get('page')).toBe('2');
+
+    // Elde olan veri silinmedi; tam ekran hata görünümü yok.
+    expect(visibleCardIds()).toEqual(page1Ids);
+    expect(screen.queryByTestId('list-error')).toBeNull();
+    expect(screen.queryByText('Bir sorun oluştu')).toBeNull();
+    expect(screen.getByTestId('result-count')).toHaveTextContent('24 uçuş');
+
+    await fireEvent.press(screen.getByTestId('load-more-retry'));
+
+    await waitFor(() => expect(visibleCardIds()).toEqual([...page1Ids, ...page2Ids]));
+    expect(visibleCardIds()).toHaveLength(16);
+    expect(screen.queryByTestId('load-more-retry')).toBeNull();
+    expect(screen.queryByTestId('list-error')).toBeNull();
+
+    // Tekrar deneme yalnız başarısız sayfayı istedi; page=1 yeniden istenmedi.
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(requestedUrls()[2].searchParams.get('page')).toBe('2');
+    expect(requestedUrls().filter(u => u.searchParams.get('page') === '1')).toHaveLength(1);
+  });
 });
 
 describe('FlightListScreen — filtre değişimi sayfalamayı sıfırlar', () => {

@@ -24,8 +24,6 @@ export type UseFlightListResult = {
   flights: FlightDto[];
   /** Son başarılı sayfanın meta.total değeri; henüz veri yoksa undefined. */
   total: number | undefined;
-  /** Bu filtre için hiç veri yok ve ilk istek sürüyor/bekliyor. */
-  isPending: boolean;
   /** Herhangi bir istek sürüyor (ilk yükleme, yenileme veya sonraki sayfa). */
   isFetching: boolean;
   isFetchingNextPage: boolean;
@@ -53,7 +51,6 @@ export function useFlightList(filters: FlightFilters): UseFlightListResult {
   const {
     data,
     error,
-    isPending,
     isFetching,
     isFetchingNextPage,
     isError,
@@ -87,7 +84,6 @@ export function useFlightList(filters: FlightFilters): UseFlightListResult {
   return {
     flights,
     total,
-    isPending,
     isFetching,
     isFetchingNextPage,
     hasNextPage,

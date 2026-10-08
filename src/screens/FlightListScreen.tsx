@@ -1,5 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useCallback, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -31,7 +31,6 @@ const keyExtractor = (item: FlightDto) => item.id;
 export function FlightListScreen({ navigation }: Props) {
   // Ekran stack'te mounted kaldığı için detaydan dönüşte filtre ve sayfalar korunur.
   const [filters, setFilters] = useState<FlightFilters>(DEFAULT_FILTERS);
-  const listRef = useRef<FlatList<FlightDto>>(null);
   const {
     flights,
     total,
@@ -44,11 +43,6 @@ export function FlightListScreen({ navigation }: Props) {
     loadMore,
     retry,
   } = useFlightList(filters);
-
-  const changeFilters = useCallback((next: FlightFilters) => {
-    listRef.current?.scrollToOffset({ offset: 0, animated: false });
-    setFilters(next);
-  }, []);
 
   const openDetail = useCallback(
     (id: string) => navigation.navigate('FlightDetail', { id }),
@@ -83,7 +77,7 @@ export function FlightListScreen({ navigation }: Props) {
         title="Uçuş bulunamadı"
         body="Seçili filtreye uyan uçuş yok. Filtreleri temizleyerek tüm uçuşları görebilirsin."
         actionLabel="Filtreleri temizle"
-        onAction={() => changeFilters(DEFAULT_FILTERS)}
+        onAction={() => setFilters(DEFAULT_FILTERS)}
       />
     ) : (
       <MessageView
@@ -97,7 +91,6 @@ export function FlightListScreen({ navigation }: Props) {
   } else {
     content = (
       <FlatList
-        ref={listRef}
         data={flights}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
@@ -124,7 +117,7 @@ export function FlightListScreen({ navigation }: Props) {
         {/* Satırın tamamı dokunulabilir: daha büyük hedef, ekran okuyucuda tek öğe. */}
         <Pressable
           style={styles.switchRow}
-          onPress={() => changeFilters({ ...filters, onlyDirect: !filters.onlyDirect })}
+          onPress={() => setFilters({ ...filters, onlyDirect: !filters.onlyDirect })}
           accessibilityRole="switch"
           accessibilityLabel="Yalnızca direkt uçuşlar"
           accessibilityState={{ checked: filters.onlyDirect }}
@@ -135,7 +128,7 @@ export function FlightListScreen({ navigation }: Props) {
           </Text>
           <Switch
             value={filters.onlyDirect}
-            onValueChange={onlyDirect => changeFilters({ ...filters, onlyDirect })}
+            onValueChange={onlyDirect => setFilters({ ...filters, onlyDirect })}
             testID="filter-only-direct"
           />
         </Pressable>
@@ -147,7 +140,7 @@ export function FlightListScreen({ navigation }: Props) {
               <Pressable
                 key={opt.value}
                 onPress={() => {
-                  if (!selected) changeFilters({ ...filters, sort: opt.value });
+                  if (!selected) setFilters({ ...filters, sort: opt.value });
                 }}
                 accessibilityRole="radio"
                 accessibilityLabel={`Sırala: ${opt.label}`}

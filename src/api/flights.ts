@@ -33,7 +33,6 @@ export function buildFlightListQuery(
   return `/flights?${params.toString()}`;
 }
 
-
 export function fetchFlightPage(
   filters: FlightFilters,
   page: number,
@@ -41,7 +40,6 @@ export function fetchFlightPage(
 ): Promise<FlightListResponse> {
   return getJson<FlightListResponse>(buildFlightListQuery(filters, page), signal);
 }
-
 
 export async function fetchFlight(id: string, signal?: AbortSignal) {
   const res = await getJson<FlightDetailResponse>(`/flights/${encodeURIComponent(id)}`, signal);

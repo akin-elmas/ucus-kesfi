@@ -129,7 +129,7 @@ describe('favoritesStore — ekle / çıkar / yeniden aç', () => {
 });
 
 describe('favoritesStore — yazma hatası', () => {
-  it('set throw ederse state geri alınır ve lastWriteError dolar; sonraki başarılı yazmada temizlenir', () => {
+  it('set throw ederse liste değişmez ve lastWriteError dolar; sonraki başarılı yazmada temizlenir', () => {
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
     const { storage, data } = memoryStorage({ [FAVORITES_STORAGE_KEY]: stored([FL001]) });
     const store = createFavoritesStore(storage);
@@ -137,17 +137,22 @@ describe('favoritesStore — yazma hatası', () => {
       throw new Error('disk dolu');
     });
 
+    // Store önce diske yazar, sonra tek set yapar: yazma patlarsa items hiç değişmez.
+    const beforeAdd = store.getState().items;
     store.getState().toggle(FL007);
 
+    expect(store.getState().items).toBe(beforeAdd);
     expect(ids(store)).toEqual(['FL001']);
     expect(store.getState().lastWriteError).toBe(WRITE_ERROR_MESSAGE);
     expect(readPayload(data)).toEqual({ version: 1, items: [FL001] });
 
-    // Çıkarma da başarısız olursa çıkarılan geri gelir.
+    // Çıkarma da başarısız olursa liste değişmez; favori hiç çıkarılmamış olur.
     storage.set.mockImplementationOnce(() => {
       throw new Error('disk dolu');
     });
+    const beforeRemove = store.getState().items;
     store.getState().remove('FL001');
+    expect(store.getState().items).toBe(beforeRemove);
     expect(ids(store)).toEqual(['FL001']);
 
     store.getState().toggle(FL007);

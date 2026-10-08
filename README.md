@@ -3,6 +3,9 @@
 İstanbul → Antalya uçuşlarını listeleyen, sunucu tarafında filtreleyip sıralayan, sayfa sayfa yükleyen
 ve favorileri cihazda kalıcı tutan Expo + TypeScript uygulaması.
 
+> **Çalıştırmadan önce:** Favoriler native bir modülle (MMKV) saklandığı için uygulama **Expo Go'da açılmaz**.
+> macOS + Xcode (iOS platform bileşeniyle) + CocoaPods gerekir; ilk derleme birkaç dakika sürer. Ayrıntı §1.
+
 ## 1. Kurulum ve çalıştırma
 
 Gereken: Node 18+ (geliştirmede 24.2.0), Xcode + iOS Simulator, CocoaPods. Xcode'un iOS platform bileşeni
@@ -88,8 +91,13 @@ src/
     TanStack'in varsayılanı (`cancelRefetch: true`) süren isteği iptal edip aynı sayfayı yeniden ister; bu yüzden
     "aynı sayfa iki kez istenmemeli" kuralı için ikisi birden gerekli.
   - `retry: false` — hata hemen gösterilir; tekrar deneme kullanıcının "Tekrar dene"sinde. Sonraki sayfa
-    hatasında yalnız o sayfa yeniden istenir, yüklenmiş sayfalar silinmez.
+    hatasında yalnız o sayfa yeniden istenir, yüklenmiş sayfalar silinmez (ekran testiyle kanıtlı).
   - `staleTime: Infinity` — veri sabit; detaydan dönüşte yeniden çekme yok, yüklenmiş sayfalar ve kaydırma konumu korunur.
+  - Varsayım: sayfaların korunması liste ekranının stack'te mounted kalmasına dayanıyor (`gcTime: 0` yalnız gözlemcisi
+    kalmayan sorguyu siler). Liste ekranını blur'da unmount eden bir ayar (ör. `popToTopOnBlur`) eklenirse sayfalar kaybolur.
+- **Ekran modeli = DTO + saf formatlayıcılar.** Ayrı bir view-model katmanı yok: ekranlar `FlightDto`'yu doğrudan
+  alır, gösterim `src/domain/format.ts`'teki saf fonksiyonlarla (fiyat, saat, tarih, süre, bagaj) render anında yapılır.
+  Formatlar tek yerde ve test edilebilir; 24 kayıt için ayrı dönüşüm katmanı yalnız soyutlama ekler.
 - **Filtre state'i ekranın `useState`'inde.** Liste ekranı stack'te mounted kaldığı için detaydan dönüşte korunur;
   kalıcılık istenmediği için global store gereksiz.
 - **Favoriler: zustand store + MMKV, uçuşun tamamı (DTO) saklanıyor.** Veri seti sabit; böylece favoriler
@@ -154,8 +162,13 @@ FL024 detayında varış tarihi 16 Ekim 2026, bagaj "Bagaj dahil değil" (FL009'
 Yukarıdakiler ilk sürümde (AsyncStorage, Expo Go) yapıldı. MMKV'ye geçişten sonra development build
 (`expo run:ios`, iPhone 16 Pro / iOS 18.6) üzerinde yeniden doğrulananlar: açılış listesi aynı (24 uçuş,
 FL004, FL009, FL006); iki favori ekle → uygulamayı `simctl terminate` ile öldür → aç → ikisi de işaretli,
-rozet "2"; Favoriler ekranında ikisini çıkar → boş durum → öldür/aç → rozet "0". Liste ve filtre katmanı
-bu geçişte değişmediği için diğer akışlar yeniden elle denenmedi; jest testleri tamamı geçiyor.
+rozet "2"; Favoriler ekranında ikisini çıkar → boş durum → öldür/aç → rozet "0". Best-practice düzeltmelerinden
+(sıralama `radio` rolü, favori listesi, store yazma sırası) sonra: sıralama seçimi ekran okuyucuda "radio button,
+checked/unchecked" olarak okunuyor, "En kısa süre" seçilince liste FL003 ile başlıyor, favori ekle → Favoriler
+ekranında görünüyor → çıkar → boş durum. Son temizliklerden sonra ayrıca: `/debug/empty` → "Uçuş bulunamadı" →
+"Filtreleri temizle" → 24 uçuş; `/debug/fail-once` ile ilk yükleme hatası → "Tekrar dene" → liste; sayfa 1 yüklüyken
+`/debug/fail-once` → sonraki sayfa hatası, 8 kart ekranda kalıyor, alttaki "Tekrar dene" ile 24 kaydın tamamı geliyor.
+Race modu ve FL024 detayı bu sürümde elle yeniden denenmedi (ilgili kod değişmedi; race ekran testiyle kapsanıyor).
 
 ## 7. Bilinen eksikler
 
