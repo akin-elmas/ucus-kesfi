@@ -38,9 +38,10 @@ npm test
 npm run validate   # typecheck + lint + format + test
 ```
 
-- `flightQuery.test.ts`: filtre ve sıralama parametrelerinin üretimi.
+- `flightQuery.test.ts`: filtre ve sıralama parametreleri, filtre başına ayrı sorgu anahtarı.
 - `favoritesStore.test.ts`: favori ekle/çıkar, depodan geri yükleme, açılışta depoya yazılmaması.
-- `FlightListScreen.test.tsx`: hata → "Tekrar dene" → liste, sonraki sayfa hatası, filtre değişince sayfa 1'e dönüş, sırasız yanıt, favori butonunun detayı açmaması.
+- `FlightListScreen.test.tsx`: yükleniyor iskeleti, hata → "Tekrar dene" → liste, sonraki sayfa hatası, filtre değişince sayfa 1'e dönüş, boş sonuç → "Filtreleri temizle", sırasız yanıt, favori butonunun detayı açmaması.
+- `FavoritesScreen.test.tsx`: kalkış saatine göre sıralama, detaya geçiş, son favori çıkınca boş durum.
 - `format.test.ts`: fiyat, saat/tarih (Europe/Istanbul), bagaj metinleri.
 
 ## 4. Kararlar

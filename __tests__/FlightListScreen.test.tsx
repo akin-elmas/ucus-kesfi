@@ -297,3 +297,90 @@ describe('FlightListScreen — kart ve favori dokunuşları', () => {
     expect(navigate).toHaveBeenCalledWith('FlightDetail', { id: 'FL004' });
   });
 });
+
+describe('FlightListScreen — boş durum ve "Filtreleri temizle"', () => {
+  it('direkt filtrede sonuç yoksa boş durum gösterir; "Filtreleri temizle" varsayılan filtreye döner', async () => {
+    const emptyDirect: FlightListResponse = {
+      items: [],
+      meta: {
+        page: 1,
+        limit: 8,
+        total: 0,
+        totalPages: 0,
+        hasMore: false,
+        sort: 'price',
+        onlyDirect: true,
+      },
+    };
+    fetchMock.mockImplementation(async url =>
+      new URL(url).searchParams.get('onlyDirect') === 'true'
+        ? jsonResponse(200, emptyDirect)
+        : jsonResponse(200, serveFlights(url)),
+    );
+
+    await renderScreen();
+    await screen.findByTestId('flight-card-FL004');
+
+    await fireEvent(screen.getByTestId('filter-only-direct'), 'valueChange', true);
+
+    expect(await screen.findByTestId('list-empty')).toBeTruthy();
+    expect(screen.getByText('Uçuş bulunamadı')).toBeTruthy();
+    expect(screen.queryByTestId('flight-list')).toBeNull();
+    expect(visibleCardIds()).toEqual([]);
+    expect(screen.getByTestId('result-count')).toHaveTextContent('0 uçuş');
+    expect(screen.getByTestId('filter-only-direct-row').props.accessibilityState).toEqual(
+      expect.objectContaining({ checked: true }),
+    );
+
+    const callsBefore = fetchMock.mock.calls.length;
+    await fireEvent.press(screen.getByRole('button', { name: 'Filtreleri temizle' }));
+
+    expect(await screen.findByTestId('flight-card-FL004')).toBeTruthy();
+    expect(fetchMock.mock.calls.length).toBeGreaterThan(callsBefore);
+    const next = requestedUrls()[callsBefore].searchParams;
+    expect(next.get('page')).toBe('1');
+    expect(next.get('onlyDirect')).toBe('false');
+    expect(next.get('sort')).toBe('price');
+
+    expect(visibleCardIds()).toEqual(idsOf(serveFlights('http://x/flights?page=1&limit=8')));
+    expect(screen.queryByTestId('list-empty')).toBeNull();
+    expect(screen.getByTestId('result-count')).toHaveTextContent('24 uçuş');
+    expect(screen.getByTestId('filter-only-direct-row').props.accessibilityState).toEqual(
+      expect.objectContaining({ checked: false }),
+    );
+  });
+});
+
+describe('FlightListScreen — ilk yükleme iskeleti', () => {
+  it('ilk istek sürerken yalnız iskelet görünür; yanıt gelince kartlar gelir', async () => {
+    let release: () => void = () => {
+      throw new Error('istek yok');
+    };
+    fetchMock.mockImplementation(
+      url =>
+        new Promise<Response>(resolve => {
+          release = () => resolve(jsonResponse(200, serveFlights(url)));
+        }),
+    );
+
+    await renderScreen();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    const loading = screen.getByTestId('list-loading');
+    expect(loading.props.accessibilityLabel).toBe('Uçuşlar yükleniyor…');
+    expect(screen.getByLabelText('Uçuşlar yükleniyor…')).toBeTruthy();
+    expect(screen.queryByTestId('flight-list')).toBeNull();
+    expect(screen.queryByTestId('list-error')).toBeNull();
+    expect(screen.queryByTestId('list-empty')).toBeNull();
+    expect(screen.queryByTestId('result-count')).toBeNull();
+    expect(visibleCardIds()).toEqual([]);
+
+    await act(async () => release());
+
+    expect(await screen.findByTestId('flight-card-FL004')).toBeTruthy();
+    expect(screen.queryByTestId('list-loading')).toBeNull();
+    expect(screen.getByTestId('flight-list')).toBeTruthy();
+    expect(visibleCardIds()).toEqual(idsOf(serveFlights('http://x/flights?page=1&limit=8')));
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+});

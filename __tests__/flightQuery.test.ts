@@ -4,6 +4,7 @@ import {
   PAGE_SIZE,
   type FlightFilters,
 } from '../src/api/flights';
+import { flightListQueryKey } from '../src/hooks/useFlightList';
 
 function parse(query: string) {
   const [path, search = ''] = query.split('?');
@@ -56,27 +57,36 @@ describe('buildFlightListQuery', () => {
     expect(params.get('limit')).toBe('20');
   });
 
-  describe('filtre değişince sayfalama başa döner', () => {
-    const changes: [string, FlightFilters][] = [
-      ['DEFAULT_FILTERS', DEFAULT_FILTERS],
-      ['yalnızca direkt açıldı', { ...DEFAULT_FILTERS, onlyDirect: true }],
-      ['sıralama süreye çevrildi', { ...DEFAULT_FILTERS, sort: 'duration' }],
-      ['ikisi birden', { onlyDirect: true, sort: 'duration' }],
+  it.each([
+    [{ onlyDirect: false, sort: 'price' }, 'false', 'price'],
+    [{ onlyDirect: true, sort: 'price' }, 'true', 'price'],
+    [{ onlyDirect: false, sort: 'duration' }, 'false', 'duration'],
+    [{ onlyDirect: true, sort: 'duration' }, 'true', 'duration'],
+  ] as [FlightFilters, string, string][])(
+    '%o filtresi sunucuya onlyDirect=%s, sort=%s olarak gider',
+    (filters, onlyDirect, sort) => {
+      const { params } = parse(buildFlightListQuery(filters, 1));
+      expect(params.get('onlyDirect')).toBe(onlyDirect);
+      expect(params.get('sort')).toBe(sort);
+    },
+  );
+});
+
+describe('flightListQueryKey', () => {
+  it('her filtre kombinasyonu ayrı bir sorgu anahtarı üretir', () => {
+    const combos: FlightFilters[] = [
+      { onlyDirect: false, sort: 'price' },
+      { onlyDirect: true, sort: 'price' },
+      { onlyDirect: false, sort: 'duration' },
+      { onlyDirect: true, sort: 'duration' },
     ];
+    const keys = combos.map(f => JSON.stringify(flightListQueryKey(f)));
+    expect(new Set(keys).size).toBe(combos.length);
+  });
 
-    it.each(changes)('%s: yeni sonucun ilk sorgusu page=1', (_label, filters) => {
-      const before = parse(buildFlightListQuery({ onlyDirect: false, sort: 'price' }, 3));
-      expect(before.params.get('page')).toBe('3');
-
-      const after = parse(buildFlightListQuery(filters, 1));
-      expect(after.params.get('page')).toBe('1');
-      expect(after.params.get('sort')).toBe(filters.sort);
-      expect(after.params.get('onlyDirect')).toBe(String(filters.onlyDirect));
-    });
-
-    it('farklı filtreler farklı sorgu üretir (eski sayfalar yeni sonuca karışamaz)', () => {
-      const queries = changes.map(([, f]) => buildFlightListQuery(f, 1));
-      expect(new Set(queries).size).toBe(queries.length);
-    });
+  it('aynı filtre aynı anahtarı üretir', () => {
+    expect(flightListQueryKey({ onlyDirect: true, sort: 'duration' })).toEqual(
+      flightListQueryKey({ onlyDirect: true, sort: 'duration' }),
+    );
   });
 });
