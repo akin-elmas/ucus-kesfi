@@ -57,6 +57,9 @@ Android'de çalıştırılmadı.
 ```bash
 npm test            # jest (jest-expo preset)
 npm run typecheck   # tsc --noEmit
+npm run lint        # ESLint (eslint-config-expo + eslint-config-prettier)
+npm run format      # Prettier ile biçimlendir (format:check yalnız kontrol eder)
+npm run validate    # typecheck + lint + format:check + test, teslim öncesi tek komut
 ```
 
 | Dosya | Ne doğruluyor |
