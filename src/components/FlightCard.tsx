@@ -8,6 +8,7 @@ import {
   formatStops,
   formatTime,
 } from '../domain/format';
+import { useFavoritesStore, useIsFavorite } from '../state/favoritesStore';
 import { FavoriteButton } from './FavoriteButton';
 import { colors, spacing } from './theme';
 
@@ -18,12 +19,32 @@ export const FlightCard = memo(function FlightCard({ flight, onPress }: Props) {
   const dep = formatTime(flight.departureAt);
   const arr = formatTime(flight.arrivalAt);
   const nextDay = arrivesNextDay(flight.departureAt, flight.arrivalAt);
+  const isFavorite = useIsFavorite(flight.id);
+  const toggleFavorite = useFavoritesStore(s => s.toggle);
+  const favoriteLabel = isFavorite ? 'Favorilerden çıkar' : 'Favorilere ekle';
 
   return (
     <Pressable
       onPress={() => onPress(flight.id)}
       accessibilityRole="button"
+      // iOS'ta erişilebilir kart iç butonu VoiceOver'dan gizler; favori aksiyonu bu yüzden
+      // kartın özel aksiyonu olarak da sunulur (VoiceOver'da yukarı/aşağı kaydırma).
+      accessibilityLabel={[
+        `${flight.airline} ${flight.flightNumber}`,
+        `${flight.origin.code} ${dep}, ${flight.destination.code} ${arr}${nextDay ? ' ertesi gün' : ''}`,
+        formatDuration(flight.durationMinutes),
+        formatStops(flight.stops),
+        formatPrice(flight.priceMinor),
+        isFavorite ? 'Favoride' : null,
+      ]
+        .filter(Boolean)
+        .join(', ')}
       accessibilityHint="Uçuş detayını açar"
+      accessibilityActions={[{ name: 'activate' }, { name: 'toggleFavorite', label: favoriteLabel }]}
+      onAccessibilityAction={e => {
+        if (e.nativeEvent.actionName === 'toggleFavorite') toggleFavorite(flight);
+        else onPress(flight.id);
+      }}
       testID={`flight-card-${flight.id}`}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >

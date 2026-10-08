@@ -121,19 +121,24 @@ export function FlightListScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.controls}>
-        <View style={styles.switchRow}>
+        {/* Satırın tamamı dokunulabilir: daha büyük hedef, ekran okuyucuda tek öğe. */}
+        <Pressable
+          style={styles.switchRow}
+          onPress={() => changeFilters({ ...filters, onlyDirect: !filters.onlyDirect })}
+          accessibilityRole="switch"
+          accessibilityLabel="Yalnızca direkt uçuşlar"
+          accessibilityState={{ checked: filters.onlyDirect }}
+          testID="filter-only-direct-row"
+        >
           <Text style={styles.switchLabel}>
             Yalnızca direkt
           </Text>
           <Switch
             value={filters.onlyDirect}
             onValueChange={onlyDirect => changeFilters({ ...filters, onlyDirect })}
-            accessibilityRole="switch"
-            accessibilityLabel="Yalnızca direkt uçuşlar"
-            accessibilityState={{ checked: filters.onlyDirect }}
             testID="filter-only-direct"
           />
-        </View>
+        </Pressable>
 
         <View style={styles.segment} accessibilityLabel="Sıralama">
           {SORT_OPTIONS.map(opt => {

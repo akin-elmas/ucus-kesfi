@@ -54,6 +54,7 @@ describe('favoritesStore — depolamadan geri yükleme', () => {
     await store().hydrate();
 
     expect(store().hydrated).toBe(true);
+    expect(store().loadFailed).toBe(false);
     expect(store().items).toEqual([FL001, FL024]);
   });
 
@@ -122,8 +123,24 @@ describe('favoritesStore — açılışta boş state kayıtları ezmez', () => {
     await flush();
 
     expect(store().hydrated).toBe(false);
+    expect(store().loadFailed).toBe(true);
     expect(store().items).toEqual([]);
     expect(setItemMock).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it('okuma hatasından sonra tekrar hydrate başarılı olursa loadFailed temizlenir', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    await AsyncStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify({ version: 1, items: [FL007] }));
+    getItemMock.mockImplementationOnce(() => Promise.reject(new Error('disk')));
+
+    await store().hydrate();
+    expect(store().loadFailed).toBe(true);
+
+    await store().hydrate();
+    expect(store().loadFailed).toBe(false);
+    expect(store().hydrated).toBe(true);
+    expect(ids()).toEqual(['FL007']);
     warn.mockRestore();
   });
 
