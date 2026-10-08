@@ -7,7 +7,7 @@ export const WRITE_ERROR_MESSAGE = 'Favori kaydedilemedi. Tekrar dene.';
 
 type StoredFavorites = { version: 1; items: FlightDto[] };
 
-export type FavoritesState = {
+type FavoritesState = {
   items: FlightDto[];
   lastWriteError: string | null;
   toggle: (flight: FlightDto) => void;

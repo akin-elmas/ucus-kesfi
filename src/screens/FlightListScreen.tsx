@@ -126,6 +126,8 @@ export function FlightListScreen({ navigation }: Props) {
           <Switch
             value={filters.onlyDirect}
             onValueChange={onlyDirect => setFilters({ ...filters, onlyDirect })}
+            importantForAccessibility="no"
+            accessibilityElementsHidden
             testID="filter-only-direct"
           />
         </Pressable>
@@ -163,7 +165,7 @@ export function FlightListScreen({ navigation }: Props) {
           })}
         </View>
 
-        {total !== undefined ? (
+        {total !== undefined && (flights.length > 0 || (!isFetching && !isError)) ? (
           <Text style={styles.count} testID="result-count" accessibilityLiveRegion="polite">
             {total} uçuş
           </Text>

@@ -7,7 +7,7 @@ export function flightListQueryKey(filters: FlightFilters) {
   return ['flights', 'list', filters] as const;
 }
 
-export type UseFlightListResult = {
+type UseFlightListResult = {
   flights: FlightDto[];
   total: number | undefined;
   isFetching: boolean;

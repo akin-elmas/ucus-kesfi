@@ -1,11 +1,11 @@
 import { Platform } from 'react-native';
 import type { ApiErrorResponse } from './flight.types';
 
-export const API_BASE_URL =
+const API_BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ??
   (Platform.OS === 'android' ? 'http://10.0.2.2:4000' : 'http://localhost:4000');
 
-export class ApiError extends Error {
+class ApiError extends Error {
   constructor(
     message: string,
     readonly status: number,

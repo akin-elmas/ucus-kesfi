@@ -186,7 +186,7 @@ describe('FlightListScreen — filtre değişimi sayfalamayı sıfırlar', () =>
     );
 
     const callsBefore = fetchMock.mock.calls.length;
-    await fireEvent(screen.getByTestId('filter-only-direct'), 'valueChange', true);
+    await fireEvent.press(screen.getByRole('switch', { name: 'Yalnızca direkt uçuşlar' }));
 
     await waitFor(() => expect(screen.getByTestId('result-count')).toHaveTextContent('17 uçuş'));
 
@@ -321,7 +321,7 @@ describe('FlightListScreen — boş durum ve "Filtreleri temizle"', () => {
     await renderScreen();
     await screen.findByTestId('flight-card-FL004');
 
-    await fireEvent(screen.getByTestId('filter-only-direct'), 'valueChange', true);
+    await fireEvent.press(screen.getByRole('switch', { name: 'Yalnızca direkt uçuşlar' }));
 
     expect(await screen.findByTestId('list-empty')).toBeTruthy();
     expect(screen.getByText('Uçuş bulunamadı')).toBeTruthy();

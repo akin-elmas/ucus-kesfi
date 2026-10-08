@@ -8,7 +8,7 @@ import type { FlightDto, FlightListResponse } from '../api/flight.types';
 import { fetchFlight } from '../api/flights';
 import { useFavoritesStore } from '../state/favoritesStore';
 
-export const flightDetailKey = (id: string) => ['flights', 'detail', id] as const;
+const flightDetailKey = (id: string) => ['flights', 'detail', id] as const;
 
 function findKnownFlight(queryClient: QueryClient, id: string): FlightDto | undefined {
   const lists = queryClient.getQueriesData<InfiniteData<FlightListResponse>>({
