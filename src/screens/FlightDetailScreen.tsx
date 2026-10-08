@@ -31,7 +31,7 @@ export function FlightDetailScreen() {
     return (
       <View style={styles.screen}>
         <MessageView
-          title={toUserMessage(error)}
+          title={toUserMessage(error, 'detail')}
           actionLabel="Tekrar dene"
           onAction={() => refetch()}
           testID="detail-error"

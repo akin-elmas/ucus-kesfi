@@ -33,14 +33,6 @@ export function buildFlightListQuery(
   return `/flights?${params.toString()}`;
 }
 
-export function buildFlightsByIdsQuery(ids: string[], sort: FlightSort = 'price'): string {
-  const params = new URLSearchParams({
-    ids: ids.join(','),
-    limit: '50',
-    sort,
-  });
-  return `/flights?${params.toString()}`;
-}
 
 export function fetchFlightPage(
   filters: FlightFilters,
@@ -50,9 +42,6 @@ export function fetchFlightPage(
   return getJson<FlightListResponse>(buildFlightListQuery(filters, page), signal);
 }
 
-export function fetchFlightsByIds(ids: string[], signal?: AbortSignal): Promise<FlightListResponse> {
-  return getJson<FlightListResponse>(buildFlightsByIdsQuery(ids), signal);
-}
 
 export async function fetchFlight(id: string, signal?: AbortSignal) {
   const res = await getJson<FlightDetailResponse>(`/flights/${encodeURIComponent(id)}`, signal);

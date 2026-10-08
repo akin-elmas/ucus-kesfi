@@ -2,6 +2,7 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useCallback, useMemo } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
+import type { FlightDto } from '../api/flight.types';
 import { FlightCard } from '../components/FlightCard';
 import { MessageView } from '../components/StateViews';
 import { colors, spacing } from '../components/theme';
@@ -9,6 +10,8 @@ import type { FavoritesStackParamList, RootTabParamList } from '../navigation/ty
 import { useFavoritesStore } from '../state/favoritesStore';
 
 type Props = NativeStackScreenProps<FavoritesStackParamList, 'FavoriteList'>;
+
+const keyExtractor = (item: FlightDto) => item.id;
 
 export function FavoritesScreen({ navigation }: Props) {
   const items = useFavoritesStore(s => s.items);
@@ -28,6 +31,11 @@ export function FavoritesScreen({ navigation }: Props) {
   const openDetail = useCallback(
     (id: string) => navigation.navigate('FlightDetail', { id }),
     [navigation],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: FlightDto }) => <FlightCard flight={item} onPress={openDetail} />,
+    [openDetail],
   );
 
   const writeError = lastWriteError ? (
@@ -61,8 +69,8 @@ export function FavoritesScreen({ navigation }: Props) {
       <FlatList
         style={styles.screen}
         data={sorted}
-        keyExtractor={f => f.id}
-        renderItem={({ item }) => <FlightCard flight={item} onPress={openDetail} />}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
         contentContainerStyle={styles.content}
         ListHeaderComponent={
           <Text style={styles.count} accessibilityRole="header" testID="favorites-count">

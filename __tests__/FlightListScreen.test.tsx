@@ -241,7 +241,7 @@ describe('FlightListScreen — sırasız yanıt (P1-2)', () => {
     expect(visibleCardIds()).toEqual(durationIds);
     expect(screen.getByTestId('result-count')).toHaveTextContent('24 uçuş');
     expect(screen.queryByTestId('list-error')).toBeNull();
-    expect(screen.getByRole('button', { name: 'Sırala: En kısa süre', selected: true })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: 'Sırala: En kısa süre', checked: true })).toBeTruthy();
   });
 });
 

@@ -22,10 +22,12 @@ export class ApiError extends Error {
 }
 
 /** Kullanıcıya gösterilecek, anlaşılır hata metni. */
-export function toUserMessage(error: unknown): string {
+export function toUserMessage(error: unknown, subject: 'list' | 'detail' = 'list'): string {
   if (error instanceof ApiError) {
     if (error.code === 'FLIGHT_NOT_FOUND') return 'Bu uçuş artık bulunamıyor.';
-    return 'Uçuşlar şu anda yüklenemedi. Lütfen tekrar deneyin.';
+    return subject === 'detail'
+      ? 'Uçuş bilgisi şu anda yüklenemedi. Lütfen tekrar deneyin.'
+      : 'Uçuşlar şu anda yüklenemedi. Lütfen tekrar deneyin.';
   }
   return 'Sunucuya ulaşılamadı. Bağlantını kontrol edip tekrar dene.';
 }

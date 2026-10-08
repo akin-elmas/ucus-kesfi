@@ -40,17 +40,15 @@ function parseStored(raw: string | undefined): FlightDto[] {
 
 export function createFavoritesStore(storage: KeyValueStorage) {
   return create<FavoritesState>((set, get) => {
-    /** Önce state'i günceller, sonra yazar; yazma patlarsa önceki listeye döner. */
+    /** Önce diske yazar, sonra tek set ile yayınlar; yazma patlarsa liste değişmez. */
     function commit(next: FlightDto[]) {
-      const prev = get().items;
-      set({ items: next });
       try {
         const payload: StoredFavorites = { version: 1, items: next };
         storage.set(FAVORITES_STORAGE_KEY, JSON.stringify(payload));
-        set({ lastWriteError: null });
+        set({ items: next, lastWriteError: null });
       } catch (e) {
         console.warn('Favoriler kaydedilemedi', e);
-        set({ items: prev, lastWriteError: WRITE_ERROR_MESSAGE });
+        set({ lastWriteError: WRITE_ERROR_MESSAGE });
       }
     }
 

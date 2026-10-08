@@ -1,6 +1,5 @@
 import {
   buildFlightListQuery,
-  buildFlightsByIdsQuery,
   DEFAULT_FILTERS,
   PAGE_SIZE,
   type FlightFilters,
@@ -81,25 +80,5 @@ describe('buildFlightListQuery', () => {
       const queries = changes.map(([, f]) => buildFlightListQuery(f, 1));
       expect(new Set(queries).size).toBe(queries.length);
     });
-  });
-});
-
-describe('buildFlightsByIdsQuery', () => {
-  it('kimlikleri virgülle tek parametrede, limit=50 ve fiyat sırasıyla gönderir', () => {
-    const { path, params } = parse(buildFlightsByIdsQuery(['FL001', 'FL007', 'FL013']));
-
-    expect(path).toBe('/flights');
-    expect(params.get('ids')).toBe('FL001,FL007,FL013');
-    expect(params.get('ids')!.split(',')).toEqual(['FL001', 'FL007', 'FL013']);
-    expect(params.get('limit')).toBe('50');
-    expect(params.get('sort')).toBe('price');
-  });
-
-  it('sıralama parametresi verilirse kullanılır; onlyDirect gönderilmez', () => {
-    const { params } = parse(buildFlightsByIdsQuery(['FL024'], 'duration'));
-
-    expect(params.get('sort')).toBe('duration');
-    expect(params.has('onlyDirect')).toBe(false);
-    expect(params.has('page')).toBe(false);
   });
 });

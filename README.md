@@ -58,8 +58,8 @@ npm run typecheck   # tsc --noEmit
 
 | Dosya | Ne doğruluyor |
 |---|---|
-| `__tests__/flightQuery.test.ts` | **Zorunlu test 1.** Filtre/sıralama → `page`, `limit`, `sort`, `onlyDirect` parametreleri; filtre değişince sorgunun `page=1`'den başlaması; `ids` toplu sorgusu. |
-| `__tests__/favoritesStore.test.ts` | **Zorunlu test 2.** Favori ekle/çıkar → depolamaya yazma → "uygulamayı yeniden aç" (aynı depolamayla yeni store oluştur) → aynı favoriler senkron olarak geri geliyor. Ayrıca: store oluşturulurken depolamaya **hiç yazılmıyor**; bozuk JSON; yazma hatasında state önceki listeye dönüyor ve `lastWriteError` doluyor. Depolama, testte bellek içi bir `KeyValueStorage` ile enjekte ediliyor. |
+| `__tests__/flightQuery.test.ts` | **Zorunlu test 1.** Filtre/sıralama → `page`, `limit`, `sort`, `onlyDirect` parametreleri; filtre değişince sorgunun `page=1`'den başlaması. |
+| `__tests__/favoritesStore.test.ts` | **Zorunlu test 2.** Favori ekle/çıkar → depolamaya yazma → "uygulamayı yeniden aç" (aynı depolamayla yeni store oluştur) → aynı favoriler senkron olarak geri geliyor. Ayrıca: store oluşturulurken depolamaya **hiç yazılmıyor**; bozuk JSON; yazma hatasında liste değişmiyor ve `lastWriteError` doluyor. Depolama, testte bellek içi bir `KeyValueStorage` ile enjekte ediliyor. |
 | `__tests__/FlightListScreen.test.tsx` | **P1.** Ekran etkileşim testleri (gerçek ekran + TanStack Query, yalnız `fetch` mock'lu): 500 → "Tekrar dene" → başarılı liste; Switch ile filtre değişince yeni istek `page=1&onlyDirect=true` ve eski kartlar yok; sırasız yanıt (iki varyant: abort'a uyan ve uymayan fetch); favori butonu navigasyonu tetiklemiyor, kart tetikliyor. |
 | `__tests__/format.test.ts` | Kuruş → `3.550,00 TL`, bagaj `0`/`null` ayrımı, Europe/Istanbul saat/tarih (FL024 ertesi gün), süre. |
 
@@ -69,7 +69,7 @@ Snapshot testi yok.
 
 ```
 src/
-  api/          HTTP katmanı: client (fetch + ApiError), flights (sorgu üreticiler + uç fonksiyonları), queryClient
+  api/          HTTP katmanı: client (fetch + ApiError), flights (sorgu üreticisi + uç fonksiyonları), queryClient
   domain/       Saf formatlayıcılar (fiyat, saat, tarih, süre, bagaj)
   state/        storage (tek MMKV örneği + KeyValueStorage arayüzü), favoritesStore — zustand
   hooks/        useFlightList (sayfalı liste), useFlight (detay)
@@ -105,8 +105,8 @@ src/
   - zustand'ın `persist` middleware'i yerine elle yazılmış kalıcılık: okuma/yazma ve hata davranışı
     açıkça kodda ve testte görünsün diye. Depolama `src/state/storage.ts`'teki küçük `KeyValueStorage`
     arayüzünün arkasında; testte bellek içi bir uygulama enjekte ediliyor.
-  - Yazma hatası (MMKV `set` hata fırlatırsa) state önceki listeye geri alınır ve Favoriler ekranında tek
-    satır uyarı gösterilir (`lastWriteError`).
+  - Önce diske yazılır, sonra tek `set` ile yayınlanır. MMKV `set` hata fırlatırsa liste değişmez ve
+    Favoriler ekranında tek satır uyarı gösterilir (`lastWriteError`).
 - **Detay** `useQuery(['flights','detail',id])`, `initialData` önce liste önbelleğinden sonra favorilerden —
   çoğu durumda ek istek atılmaz; deep-link benzeri durumda ağdan çekilir.
 - **Tarih/saat** Intl'e ve cihaz saat dilimine bağlı değil: Europe/Istanbul 2016'dan beri sabit UTC+3,
@@ -114,9 +114,15 @@ src/
 - **Navigasyon:** React Navigation (bottom-tabs + native-stack). Expo Router dosya tabanlı rotalar için
   fazla; iki tab ve tek detay ekranı için açık bir navigator tanımı daha okunur.
 - **Erişilebilirlik:** Favori butonu `accessibilityState.selected` + şekil (★/☆) + metin ("Favoride");
-  sıralama butonlarında ✓ ve kalın çerçeve; direkt filtresi satırın tamamı `role="switch"` + `checked`.
+  sıralama seçenekleri `radiogroup` içinde `radio` + `checked`, ayrıca ✓ ve kalın çerçeve; direkt filtresi satırın tamamı `role="switch"` + `checked`.
   iOS'ta erişilebilir kart iç butonu VoiceOver'dan gizlediği için kartın özet etiketi ve
   "Favorilere ekle/çıkar" özel aksiyonu var.
+- **Best-practice kontrolü ve bilinçli olarak yapılmayanlar.** Kod, Callstack'in `react-native-best-practices` /
+  `react-navigation` ve `expo-react-native-performance` kontrol listeleriyle gözden geçirildi. Uyanlar: kararlı
+  `renderItem`/`keyExtractor` + `memo`'lu kart, boolean dönen store seçicileri, fetch iptali, önbellekten detay.
+  Yapılmayanlar ölçülmemiş optimizasyon olacağı için: FlashList ve `getItemLayout` (en fazla 24 kayıt, kart
+  yüksekliği değişken), odağa gelince yeniden çekme (§2.4 yüklenmiş sayfaların korunmasını istiyor), statik
+  navigasyon API'si ve native bottom tabs (davranış kazancı yok).
 
 ## 5. Harcanan süre
 

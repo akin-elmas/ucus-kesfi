@@ -140,7 +140,7 @@ export function FlightListScreen({ navigation }: Props) {
           />
         </Pressable>
 
-        <View style={styles.segment} accessibilityLabel="Sıralama">
+        <View style={styles.segment} accessible={false} accessibilityRole="radiogroup" accessibilityLabel="Sıralama">
           {SORT_OPTIONS.map(opt => {
             const selected = filters.sort === opt.value;
             return (
@@ -149,9 +149,9 @@ export function FlightListScreen({ navigation }: Props) {
                 onPress={() => {
                   if (!selected) changeFilters({ ...filters, sort: opt.value });
                 }}
-                accessibilityRole="button"
+                accessibilityRole="radio"
                 accessibilityLabel={`Sırala: ${opt.label}`}
-                accessibilityState={{ selected }}
+                accessibilityState={{ checked: selected }}
                 testID={opt.testID}
                 style={({ pressed }) => [
                   styles.segmentItem,
