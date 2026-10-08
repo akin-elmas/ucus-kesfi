@@ -1,0 +1,9 @@
+android
+ios
+.expo
+node_modules
+coverage
+case-kit
+src/api/flight.types.ts
+package-lock.json
+*.md

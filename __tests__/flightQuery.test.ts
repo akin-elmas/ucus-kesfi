@@ -57,7 +57,7 @@ describe('buildFlightListQuery', () => {
   });
 
   describe('filtre değişince sayfalama başa döner', () => {
-    const changes: Array<[string, FlightFilters]> = [
+    const changes: [string, FlightFilters][] = [
       ['DEFAULT_FILTERS', DEFAULT_FILTERS],
       ['yalnızca direkt açıldı', { ...DEFAULT_FILTERS, onlyDirect: true }],
       ['sıralama süreye çevrildi', { ...DEFAULT_FILTERS, sort: 'duration' }],
