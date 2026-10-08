@@ -129,7 +129,12 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   title: { fontSize: 20, fontWeight: '700', color: colors.text },
-  sectionHeading: { fontSize: 13, fontWeight: '600', color: colors.muted, textTransform: 'uppercase' },
+  sectionHeading: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.muted,
+    textTransform: 'uppercase',
+  },
   endpoint: { gap: 2 },
   time: { fontSize: 26, fontWeight: '700', color: colors.text },
   date: { fontSize: 15, color: colors.text },

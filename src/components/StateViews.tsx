@@ -39,7 +39,13 @@ export function MessageView({ title, body, actionLabel, onAction, testID }: Mess
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl, gap: spacing.md },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+    gap: spacing.md,
+  },
   title: { fontSize: 18, fontWeight: '700', color: colors.text, textAlign: 'center' },
   body: { fontSize: 15, color: colors.muted, textAlign: 'center' },
   button: {

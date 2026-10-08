@@ -121,9 +121,7 @@ export function FlightListScreen({ navigation }: Props) {
           accessibilityState={{ checked: filters.onlyDirect }}
           testID="filter-only-direct-row"
         >
-          <Text style={styles.switchLabel}>
-            Yalnızca direkt
-          </Text>
+          <Text style={styles.switchLabel}>Yalnızca direkt</Text>
           <Switch
             value={filters.onlyDirect}
             onValueChange={onlyDirect => setFilters({ ...filters, onlyDirect })}
@@ -131,7 +129,12 @@ export function FlightListScreen({ navigation }: Props) {
           />
         </Pressable>
 
-        <View style={styles.segment} accessible={false} accessibilityRole="radiogroup" accessibilityLabel="Sıralama">
+        <View
+          style={styles.segment}
+          accessible={false}
+          accessibilityRole="radiogroup"
+          accessibilityLabel="Sıralama"
+        >
           {SORT_OPTIONS.map(opt => {
             const selected = filters.sort === opt.value;
             return (
@@ -182,7 +185,12 @@ type FooterProps = {
   onRetry: () => void;
 };
 
-function ListFooter({ isFetchingNextPage, isFetchNextPageError, hasNextPage, onRetry }: FooterProps) {
+function ListFooter({
+  isFetchingNextPage,
+  isFetchNextPageError,
+  hasNextPage,
+  onRetry,
+}: FooterProps) {
   if (isFetchingNextPage) {
     return (
       <View style={styles.footer} accessibilityLabel="Sonraki uçuşlar yükleniyor">
@@ -226,7 +234,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
   },
-  switchRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 44 },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 44,
+  },
   switchLabel: { fontSize: 15, fontWeight: '600', color: colors.text },
   segment: { flexDirection: 'row', gap: spacing.sm },
   segmentItem: {

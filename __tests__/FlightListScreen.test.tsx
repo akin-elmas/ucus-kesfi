@@ -89,9 +89,7 @@ describe('FlightListScreen — hata ve "Tekrar dene" (P1-1)', () => {
     await renderScreen();
 
     expect(await screen.findByTestId('list-error')).toBeTruthy();
-    expect(
-      screen.getByText('Uçuşlar şu anda yüklenemedi. Lütfen tekrar deneyin.'),
-    ).toBeTruthy();
+    expect(screen.getByText('Uçuşlar şu anda yüklenemedi. Lütfen tekrar deneyin.')).toBeTruthy();
     expect(screen.queryByTestId('flight-list')).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
@@ -122,7 +120,9 @@ describe('FlightListScreen — hata ve "Tekrar dene" (P1-1)', () => {
     expect(page1Ids).toHaveLength(8);
 
     const list = screen.getByTestId('flight-list');
-    await fireEvent(list, 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 400, height: 800 } } });
+    await fireEvent(list, 'layout', {
+      nativeEvent: { layout: { x: 0, y: 0, width: 400, height: 800 } },
+    });
     await fireEvent(list, 'contentSizeChange', 400, 2500);
     await fireEvent.scroll(list, {
       nativeEvent: {
@@ -170,7 +170,9 @@ describe('FlightListScreen — filtre değişimi sayfalamayı sıfırlar', () =>
     expect(allFlightsPage1).toContain('FL004');
 
     const list = screen.getByTestId('flight-list');
-    await fireEvent(list, 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 400, height: 800 } } });
+    await fireEvent(list, 'layout', {
+      nativeEvent: { layout: { x: 0, y: 0, width: 400, height: 800 } },
+    });
     await fireEvent(list, 'contentSizeChange', 400, 2500);
     await fireEvent.scroll(list, {
       nativeEvent: {
@@ -240,35 +242,40 @@ describe('FlightListScreen — sırasız yanıt (P1-2)', () => {
   it.each([
     ['abort sinyalini yok sayan servis', false],
     ['abort sinyaline uyan servis', true],
-  ])('%s: geç dönen eski (price) yanıtı yeni (duration) sonucun üzerine yazmaz', async (_l, honorAbort) => {
-    const net = deferredFetch(honorAbort);
+  ])(
+    '%s: geç dönen eski (price) yanıtı yeni (duration) sonucun üzerine yazmaz',
+    async (_l, honorAbort) => {
+      const net = deferredFetch(honorAbort);
 
-    await renderScreen();
-    await waitFor(() => expect(net.pending).toHaveLength(1));
-    const priceReq = net.find('price');
+      await renderScreen();
+      await waitFor(() => expect(net.pending).toHaveLength(1));
+      const priceReq = net.find('price');
 
-    await fireEvent.press(screen.getByTestId('sort-duration'));
-    await waitFor(() => expect(net.pending).toHaveLength(2));
-    const durationReq = net.find('duration');
-    expect(durationReq.url.searchParams.get('page')).toBe('1');
+      await fireEvent.press(screen.getByTestId('sort-duration'));
+      await waitFor(() => expect(net.pending).toHaveLength(2));
+      const durationReq = net.find('duration');
+      expect(durationReq.url.searchParams.get('page')).toBe('1');
 
-    const durationIds = idsOf(serveFlights(durationReq.url.toString()));
-    const priceIds = idsOf(serveFlights(priceReq.url.toString()));
-    expect(durationIds).not.toEqual(priceIds);
+      const durationIds = idsOf(serveFlights(durationReq.url.toString()));
+      const priceIds = idsOf(serveFlights(priceReq.url.toString()));
+      expect(durationIds).not.toEqual(priceIds);
 
-    await act(async () => durationReq.resolve());
-    await waitFor(() => expect(visibleCardIds()).toEqual(durationIds));
+      await act(async () => durationReq.resolve());
+      await waitFor(() => expect(visibleCardIds()).toEqual(durationIds));
 
-    await act(async () => priceReq.resolve());
-    await act(async () => {
-      await new Promise(r => setTimeout(r, 0));
-    });
+      await act(async () => priceReq.resolve());
+      await act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
 
-    expect(visibleCardIds()).toEqual(durationIds);
-    expect(screen.getByTestId('result-count')).toHaveTextContent('24 uçuş');
-    expect(screen.queryByTestId('list-error')).toBeNull();
-    expect(screen.getByRole('radio', { name: 'Sırala: En kısa süre', checked: true })).toBeTruthy();
-  });
+      expect(visibleCardIds()).toEqual(durationIds);
+      expect(screen.getByTestId('result-count')).toHaveTextContent('24 uçuş');
+      expect(screen.queryByTestId('list-error')).toBeNull();
+      expect(
+        screen.getByRole('radio', { name: 'Sırala: En kısa süre', checked: true }),
+      ).toBeTruthy();
+    },
+  );
 });
 
 describe('FlightListScreen — kart ve favori dokunuşları', () => {

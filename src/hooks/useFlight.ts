@@ -1,4 +1,9 @@
-import { useQuery, useQueryClient, type InfiniteData, type QueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useQueryClient,
+  type InfiniteData,
+  type QueryClient,
+} from '@tanstack/react-query';
 import type { FlightDto, FlightListResponse } from '../api/flight.types';
 import { fetchFlight } from '../api/flights';
 import { useFavoritesStore } from '../state/favoritesStore';

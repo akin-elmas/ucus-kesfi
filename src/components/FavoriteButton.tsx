@@ -45,7 +45,12 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     minHeight: 32,
   },
-  lg: { paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, minHeight: 44, alignSelf: 'flex-start' },
+  lg: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    minHeight: 44,
+    alignSelf: 'flex-start',
+  },
   active: { borderColor: colors.favorite, backgroundColor: '#FFF4EE' },
   pressed: { opacity: 0.6 },
   icon: { fontSize: 16, color: colors.muted },

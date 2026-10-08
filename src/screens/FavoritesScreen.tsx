@@ -84,5 +84,10 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.lg, gap: spacing.md },
   count: { fontSize: 15, fontWeight: '600', color: colors.muted },
-  writeError: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm, fontSize: 13, color: colors.danger },
+  writeError: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    fontSize: 13,
+    color: colors.danger,
+  },
 });

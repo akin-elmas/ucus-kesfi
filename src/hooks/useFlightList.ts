@@ -42,7 +42,8 @@ export function useFlightList(filters: FlightFilters): UseFlightListResult {
   } = query;
 
   const flights = useMemo(() => data?.pages.flatMap(p => p.items) ?? [], [data]);
-  const total = data && data.pages.length > 0 ? data.pages[data.pages.length - 1].meta.total : undefined;
+  const total =
+    data && data.pages.length > 0 ? data.pages[data.pages.length - 1].meta.total : undefined;
 
   const loadMore = useCallback(() => {
     if (!hasNextPage || isFetchingNextPage || isFetching || isError) return;

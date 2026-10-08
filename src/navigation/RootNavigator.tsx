@@ -16,8 +16,16 @@ const detailOptions = { title: 'Uçuş detayı', headerBackTitle: 'Geri' };
 function FlightsStackScreen() {
   return (
     <FlightsStack.Navigator>
-      <FlightsStack.Screen name="FlightList" component={FlightListScreen} options={{ title: 'İstanbul → Antalya' }} />
-      <FlightsStack.Screen name="FlightDetail" component={FlightDetailScreen} options={detailOptions} />
+      <FlightsStack.Screen
+        name="FlightList"
+        component={FlightListScreen}
+        options={{ title: 'İstanbul → Antalya' }}
+      />
+      <FlightsStack.Screen
+        name="FlightDetail"
+        component={FlightDetailScreen}
+        options={detailOptions}
+      />
     </FlightsStack.Navigator>
   );
 }
@@ -25,8 +33,16 @@ function FlightsStackScreen() {
 function FavoritesStackScreen() {
   return (
     <FavoritesStack.Navigator>
-      <FavoritesStack.Screen name="FavoriteList" component={FavoritesScreen} options={{ title: 'Favoriler' }} />
-      <FavoritesStack.Screen name="FlightDetail" component={FlightDetailScreen} options={detailOptions} />
+      <FavoritesStack.Screen
+        name="FavoriteList"
+        component={FavoritesScreen}
+        options={{ title: 'Favoriler' }}
+      />
+      <FavoritesStack.Screen
+        name="FlightDetail"
+        component={FlightDetailScreen}
+        options={detailOptions}
+      />
     </FavoritesStack.Navigator>
   );
 }

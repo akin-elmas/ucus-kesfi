@@ -37,7 +37,10 @@ export const FlightCard = memo(function FlightCard({ flight, onPress }: Props) {
         .filter(Boolean)
         .join(', ')}
       accessibilityHint="Uçuş detayını açar"
-      accessibilityActions={[{ name: 'activate' }, { name: 'toggleFavorite', label: favoriteLabel }]}
+      accessibilityActions={[
+        { name: 'activate' },
+        { name: 'toggleFavorite', label: favoriteLabel },
+      ]}
       onAccessibilityAction={e => {
         if (e.nativeEvent.actionName === 'toggleFavorite') toggleFavorite(flight);
         else onPress(flight.id);

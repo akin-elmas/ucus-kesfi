@@ -1,9 +1,5 @@
 import { getJson } from './client';
-import type {
-  FlightDetailResponse,
-  FlightListResponse,
-  FlightSort,
-} from './flight.types';
+import type { FlightDetailResponse, FlightListResponse, FlightSort } from './flight.types';
 
 export const PAGE_SIZE = 8;
 
