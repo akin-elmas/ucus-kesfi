@@ -191,11 +191,8 @@ Race modu ve FL024 detayı bu sürümde elle yeniden denenmedi (ilgili kod deği
 
 ## AI kullanımı
 
-Claude Code (Anthropic) kullanıldı. Temel iskelet (API katmanı, formatlayıcılar, favori store'u, navigasyon)
-ana oturumda yazıldı; liste ekranı + sayfalama hook'u, detay + favoriler ekranları ve testler alt ajanlara
-paralel dağıtıldı, çıktıları ana oturumda okunup gözden geçirildi. Favorilerin AsyncStorage'dan MMKV'ye
-geçişi de (store + testler, native build, README) alt ajanlarla paralel yapıldı. Doğrulama: `tsc` ve jest; race testinin
-gerçekten hata yakaladığını görmek için kod bilerek bozulup testin kırıldığı kontrol edildi; tüm P0 akışları
-iOS Simulator'da mock servise karşı tek tek denendi (yukarıdaki liste). Simülatörde Switch'in sentetik
-dokunuşa tepki vermemesi bu sırada fark edildi ve satırın tamamı dokunulabilir yapıldı; VoiceOver'ın kart
-içindeki favori butonunu gizlemesi de gözden geçirmede yakalanıp düzeltildi.
+- Geliştirmede **Claude Code** kullanıldı.
+- Kod, case maddelerine ve şu skill'lerin kontrol listelerine göre **AI ajanlarına review ettirildi**:
+  `react-native-best-practices`, `react-navigation` (Callstack) ve `expo-react-native-performance`.
+- Doğrulama: `npm run validate` (typecheck, lint, format, jest), testlerin hatayı gerçekten yakaladığını görmek
+  için kodu bilerek bozma denemeleri ve iOS Simulator'da mock servise karşı elle test.
